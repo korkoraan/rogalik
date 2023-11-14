@@ -3,3 +3,32 @@ obj/
 /packages/
 riderModule.iml
 /_ReSharper.Caches/
+\.idea/
+# =========================
+# NUnit Specific
+# =========================
+.~
+*.userprefs
+*.StyleCop
+*.sdf
+GeneratedAssemblyInfo.cs
+StyleCop.Cache
+local.settings.include
+InternalTrace.txt
+TestResult.xml
+testCaseCollection.xml
+deploy
+lib
+test-results
+package
+images
+MockAssemblyResult.xml
+PortabilityAnalysis*.html
+project.lock.json
+*.project.lock.json
+.dotnet
+*.err
+*.out
+.ionide
+.fake
+BenchmarkDotNet.Artifacts*
