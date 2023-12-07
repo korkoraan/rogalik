@@ -37,6 +37,18 @@
 /processorParam:TextureFormat=Color
 /build:../logo.ico;logo.ico
 
+#begin tiles/goblin_unarmed.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:tiles/goblin_unarmed.png
+
 #begin tiles/player_warrior.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -48,6 +60,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:tiles/player_warrior.png
+
+#begin tiles/spirit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:tiles/spirit.png
 
 #begin tiles/surface_rock_1.png
 /importer:TextureImporter

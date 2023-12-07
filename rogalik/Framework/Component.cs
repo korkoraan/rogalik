@@ -1,9 +1,11 @@
-namespace rogalik.Components;
+namespace rogalik.Framework;
 
 /// <summary>
 /// Base class for all components.
 /// </summary>
 public abstract class Component
 {
-    public Obj parent;
+    public Obj owner;
+
+    public abstract void Init();
 }

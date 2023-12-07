@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using rogalik.Components;
+using rogalik.Framework;
 using Point = rogalik.Common.Point;
 
 namespace rogalik.Rendering;
@@ -29,7 +30,8 @@ public class Renderer
             foreach (var obj in cell.contents)
             {
                 var a = obj.GetComponent<Appearance>();
-                _spriteBatch.Draw(a.texture, new Vector2(cell.pos.x * _cellSize, cell.pos.y * _cellSize), Color.White);
+                var pos = new Vector2(cell.pos.x * _cellSize, cell.pos.y * _cellSize);
+                _spriteBatch.Draw(a.texture, pos, null, Color.White, a.rotation, a.origin, 1, SpriteEffects.None, 0);
             }
         }
     }

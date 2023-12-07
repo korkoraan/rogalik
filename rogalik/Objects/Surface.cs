@@ -1,5 +1,6 @@
 using rogalik.Common;
 using rogalik.Components;
+using rogalik.Framework;
 using rogalik.Rendering;
 
 namespace rogalik.Objects;
