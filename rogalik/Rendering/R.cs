@@ -16,12 +16,16 @@ public static class R
     public static class Tiles
     {
         public static readonly Texture2D playerWarrior;
+        public static readonly Texture2D goblinUnarmed;
+        public static readonly Texture2D spirit;
         public static readonly List<Texture2D> surfaceRock;
 
         static Tiles()
         {
             playerWarrior = Load("player_warrior");
             surfaceRock = Load("surface_rock", 4);
+            goblinUnarmed = Load("goblin_unarmed");
+            spirit = Load("spirit");
         }
         private static Texture2D Load(string assetName)
         {

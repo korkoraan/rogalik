@@ -1,17 +1,36 @@
 using rogalik.Common;
+using rogalik.Framework;
+using Action = rogalik.Framework.Action;
 
 namespace rogalik.Components;
 
 public class Legs : Component
 {
-    public int movePoints;
-    public Legs(int movePoints)
+    //TODO: probably should be declared as attribute somewhere in owner 
+    public readonly uint speed;
+    public Legs(uint speed)
     {
-        this.movePoints = movePoints;
+        this.speed = speed;
     }
     
-    public void Move(Point point)
+    public override void Init()
     {
-        parent.location.TryMoving(parent, point);
+    }
+    
+    public Action StepTo(Point point)
+    {
+        return new Move(owner, Consts.BIG_TICK / speed, 1000, point);
+    }
+
+    public Action Kick(Obj target)
+    {
+        var dmg = Rnd.NewInt(1, 10);
+        return new BluntDamage(
+            actor: owner, 
+            duration: Consts.BIG_TICK / speed,
+            energyCost: 1000,
+            target: target,
+            damage: dmg
+            );
     }
 }
