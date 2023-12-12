@@ -19,6 +19,9 @@ public static class R
         public static readonly Texture2D goblinUnarmed;
         public static readonly Texture2D spirit;
         public static readonly List<Texture2D> surfaceRock;
+        public static readonly List<Texture2D> wallRock;
+        public static readonly List<Texture2D> door;
+        public static readonly Texture2D doorOpened;
 
         static Tiles()
         {
@@ -26,6 +29,9 @@ public static class R
             surfaceRock = Load("surface_rock", 4);
             goblinUnarmed = Load("goblin_unarmed");
             spirit = Load("spirit");
+            wallRock = Load("wall_rock", 2);
+            door = Load("door", 3);
+            doorOpened = Load("door_opened");
         }
         private static Texture2D Load(string assetName)
         {

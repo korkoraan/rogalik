@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using rogalik.Common;
 
@@ -7,17 +6,16 @@ namespace rogalik.Framework;
 public abstract class Obj
 {
     public Location location;
-    public Cell cell;
     private List<Component> _components = new ();
+    public Point point;
     
-    public int x => cell.pos.x;
-    public int y => cell.pos.y;
-    public int z => cell.pos.z;
+    public int x => point.x;
+    public int y => point.y;
+    public int z => point.z;
 
-    public Point point => (x, y, z); 
-
-    protected Obj(Location location)
+    protected Obj(Point point, Location location)
     {
+        this.point = point;
         this.location = location;
     }
     

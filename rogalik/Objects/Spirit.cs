@@ -11,7 +11,7 @@ public class SpiritMind : Mind
 
     public override Action ChooseNextAction()
     {
-        var p = new Point(Rnd.NewInt(-1,1), Rnd.NewInt(-1,1));
+        var p = new Point(Rnd.NewInt(-1,2), Rnd.NewInt(-1,2));
         return _legs?.StepTo(p);
     }
 
@@ -23,7 +23,7 @@ public class SpiritMind : Mind
 
 public class Spirit : Obj
 {
-    public Spirit(Location location) : base(location)
+    public Spirit(Point point, Location location) : base(point, location)
     {
         AddComponent(new Appearance(R.Tiles.spirit));
         AddComponent(new Legs(1));

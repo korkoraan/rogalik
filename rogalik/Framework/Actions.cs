@@ -1,5 +1,6 @@
 using rogalik.Common;
 using rogalik.Components;
+using rogalik.Objects;
 
 namespace rogalik.Framework;
 
@@ -56,5 +57,19 @@ public class BluntDamage : Action
         var selected = destructible[Rnd.NewInt(0, destructible.Count - 1)];
         if(selected is IDestructible d)
             d.ReceiveDamage(damage);
+    }
+}
+
+public class OpenAction : Action
+{
+    private IOpenable _openable;
+    public OpenAction(Obj actor, uint duration, uint energyCost, IOpenable openable) : base(actor: actor, duration: duration, energyCost: energyCost)
+    {
+        _openable = openable;
+    }
+
+    public override void Apply()
+    {
+        _openable.Open();
     }
 }

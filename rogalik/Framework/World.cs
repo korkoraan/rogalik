@@ -41,41 +41,40 @@ public abstract class Location
 
     public void TryMoving(Obj obj, Point point)
     {
-        var x = obj.cell.pos.x;
-        var y = obj.cell.pos.y;
-        var z = obj.cell.pos.z;
+        var x = obj.x;
+        var y = obj.y;
+        var z = obj.z;
 
         try
         {
             var cell = cells[z + point.z][x + point.x, y + point.y];
+            var impassible = cell.contents.Find(o => o.HasComponent<Impassible>())?.GetComponent<Impassible>();
+            if (impassible != null && impassible.enabled)
+                return;
             cells[z][x, y].contents.Remove(obj);
+            obj.point += point;
             cell.contents.Add(obj);
-            obj.cell = cell;
         }
         catch (IndexOutOfRangeException)    
         {
-            C.Print($"cannot move {obj.GetType()} from {obj.cell.pos} to {point}: destination is out of bounds");
+            C.Print($"cannot move {obj.GetType()} from {obj.point} to {point}: destination is out of bounds");
         }
     }
 
-    public void Spawn(Obj obj, Point point)
+    public void Spawn(Obj obj)
     {
         try
         {
-            var cell = cells[point.z][point.x, point.y];
+            var cell = cells[obj.z][obj.x, obj.y];
             cell.contents.Add(obj);
-            obj.cell = cell;
             var mind = obj.GetComponent<Mind>();
             if(mind is not null)
                 minds.Add(mind);
             obj.Init();
-            
-            if (obj is not Surface)
-                C.Print($"spawned {obj.GetType()} at {point}");
         }
         catch (IndexOutOfRangeException)    
         {
-            C.Print($"cannot spawn {obj.GetType()} at {point}: destination is out of bounds");
+            C.Print($"cannot spawn {obj.GetType()} at {obj.point}: destination is out of bounds");
         }
     }
 
@@ -135,12 +134,31 @@ public class TestLevel : Location
             for (int y = 0; y < size; y++)
             {
                 cells[0][x, y] = new Cell(new Point(x, y));
-                Spawn(new Surface(this), (x, y));
+                Spawn(new Surface((x, y), this));
             } 
         }
+
+        var lastWidth = 0;
+        var lastStart = new Point(1, 10);
+        var rooms = Rnd.NewInt(5, 10);
+        for (int i = 0; i < rooms; i++)
+        {
+            var newStart = new Point(lastWidth + lastStart.x + 1, lastStart.y);
+            var newWidth = (uint)Rnd.NewInt(4, 10);
+            var room = new EmptyRoom(this,  newStart , newWidth, (uint)Rnd.NewInt(4,10));
         
-        Spawn(new Goblin(this), (0,0));
-        Spawn(new Spirit(this), (3,3));
+            foreach (var o in room.objects)
+            {
+                if(o is null) continue;
+                Spawn(o);
+            }
+
+            lastStart = newStart;
+            lastWidth = (int)newWidth;
+        }
+        
+        Spawn(new Goblin((0,0),this));
+        Spawn(new Spirit((3,3),this));
     }
 }
 
@@ -170,11 +188,11 @@ public sealed class World
     }
     public World()
     {
-        _locations = new() { new TestLevel(this, 10) };
-        var player = new Player(_locations[0]);
+        _locations = new() { new TestLevel(this, 100) };
+        var player = new Player((5,5), _locations[0]);
         
         _playerMind = player.GetComponent<PlayerMind>();
-        _locations[0].Spawn(player, (5,5));
+        _locations[0].Spawn(player);
         _playerMind.PlayerDidSmth += OnPlayerDidSmth;
     }
 

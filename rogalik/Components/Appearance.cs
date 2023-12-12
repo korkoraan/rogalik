@@ -9,7 +9,7 @@ namespace rogalik.Components;
 /// </summary>
 public class Appearance : Component
 {
-    public Texture2D texture { get; private set; }
+    public Texture2D texture;
     public float rotation { get; private set; }
     public Vector2 origin { get; private set; }
 

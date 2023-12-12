@@ -10,7 +10,7 @@ namespace rogalik.Objects;
 /// </summary>
 public class Surface : Obj
 {
-    public Surface(Location location) : base(location)
+    public Surface(Point point, Location location) : base(point, location)
     {
         AddComponent(new Appearance(R.Tiles.surfaceRock.Random()));
     }

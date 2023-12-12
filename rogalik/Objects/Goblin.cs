@@ -1,3 +1,4 @@
+using rogalik.Common;
 using rogalik.Components;
 using rogalik.Framework;
 using rogalik.Rendering;
@@ -11,7 +12,9 @@ public class GoblinMind : Mind
     public override Action ChooseNextAction()
     {
         if (energyCurrent < 1) return null;
-        return _legs.StepTo((1, 1));
+        var x = Rnd.NewInt(0, 2);
+        var y = Rnd.NewInt(0, 2);
+        return _legs.StepTo((x, y));
     }
 
     public override void Init()
@@ -22,7 +25,7 @@ public class GoblinMind : Mind
 
 public class Goblin : Obj
 {
-    public Goblin(Location location) : base(location)
+    public Goblin(Point point, Location location) : base(point, location)
     {
         AddComponent(new Legs(1));
         AddComponent(new Appearance(R.Tiles.goblinUnarmed));
