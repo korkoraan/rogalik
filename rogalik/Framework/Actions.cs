@@ -18,27 +18,30 @@ public abstract class Action
         this.target = target;
     }
     
-    public abstract void Apply();
+    public abstract bool Apply();
 }
 
 public class DoNothing : Action
 {
     public DoNothing(Obj actor) : base(actor) { }
 
-    public override void Apply() { }
+    public override bool Apply()
+    {
+        return true; 
+    }
 }
 
-public class Move : Action
+public class MoveSelf : Action
 {
     public readonly Point point;
 
-    public Move(Obj actor, uint duration, uint energyCost, Point point) : base(actor: actor, duration: duration, energyCost: energyCost)
+    public MoveSelf(Obj actor, uint duration, uint energyCost, Point point) : base(actor: actor, duration: duration, energyCost: energyCost)
     {
         this.point = point;
     }
-    public override void Apply()
+    public override bool Apply()
     {
-        actor.location.TryMoving(actor, point);
+        return actor.location.TryMoving(actor, point);
     }
 }
 
@@ -50,13 +53,14 @@ public class BluntDamage : Action
         this.damage = damage;
     }
 
-    public override void Apply()
+    public override bool Apply()
     {
         var destructible = target.GetAllComponents<IDestructible>();
-        if(destructible.Count < 1) return;
+        if(destructible.Count < 1) return false;
         var selected = destructible[Rnd.NewInt(0, destructible.Count - 1)];
         if(selected is IDestructible d)
             d.ReceiveDamage(damage);
+        return true;
     }
 }
 
@@ -68,8 +72,8 @@ public class OpenAction : Action
         _openable = openable;
     }
 
-    public override void Apply()
+    public override bool Apply()
     {
-        _openable.Open();
+        return _openable.Open();
     }
 }

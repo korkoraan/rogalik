@@ -14,25 +14,27 @@ class Camera
         this.pos = pos;
         Input.KeysPressed += OnKeysPressed;
     }
-
-    public Camera()
-    {
-        
-    }
     
     private void OnKeysPressed(List<Keys> keys)
     {
+        //TODO: this is hardcode needs fixing
         if(keys.Contains(Keys.NumPad8))
-            pos.y -= 50;
+            pos.y -= 12;
         if(keys.Contains(Keys.NumPad4))
-            pos.x -= 50;
+            pos.x -= 12;
         if(keys.Contains(Keys.NumPad2))
-            pos.y += 50;
+            pos.y += 12;
         if(keys.Contains(Keys.NumPad6))
-            pos.x += 50;
+            pos.x += 12;
         if(keys.Contains(Keys.PageUp))
             zoom -= 0.1f;
         if(keys.Contains(Keys.PageDown))
             zoom += 0.1f;
+    }
+
+    public void Move(Point point)
+    {
+        pos.x += point.x * 12;
+        pos.y += point.y * 12;
     }
 }

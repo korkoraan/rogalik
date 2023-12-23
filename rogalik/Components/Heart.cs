@@ -1,5 +1,6 @@
-using rogalik.Common;
+using System.Linq;
 using rogalik.Framework;
+using rogalik.Rendering;
 
 namespace rogalik.Components;
 
@@ -16,11 +17,13 @@ public class Heart : Component, IDestructible
     public void ReceiveDamage(int damage)
     {
         _healthPoints -= damage;
-        C.Print($"{owner} receives {damage} damage");
+        var name = owner.GetType().ToString().Split('.').Last();
+        UIData.messages.Add($"{name} receives {damage} damage");
         if (_healthPoints < 0)
-        { 
-            C.Print($"{owner} heart stops beating, and he dies");
+        {
+            UIData.messages.Add($"{name} heart stops beating, and he dies");
             _ownerMind?.Die();
+            owner.RemoveComponent(this);
         }
     }
 }

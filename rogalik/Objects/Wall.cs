@@ -7,7 +7,7 @@ namespace rogalik.Objects;
 
 public interface IOpenable
 {
-    public void Open();
+    public bool Open();
 }
 
 public class Wall : Obj

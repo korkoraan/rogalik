@@ -48,4 +48,9 @@ public abstract class Obj
             c.Init();
         }
     }
+
+    public void RemoveComponent(Component component)
+    {
+        _components.Remove(component);
+    }
 }
