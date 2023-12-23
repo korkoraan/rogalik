@@ -19,7 +19,7 @@ public class Legs : Component
     
     public Action StepTo(Point point)
     {
-        return new Move(owner, Consts.BIG_TICK / speed, 1000, point);
+        return new MoveSelf(owner, Consts.BIG_TICK / speed, 1000, point);
     }
 
     public Action Kick(Obj target)

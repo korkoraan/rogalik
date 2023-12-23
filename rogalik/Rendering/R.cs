@@ -51,4 +51,44 @@ public static class R
             return textures;
         }
     }
+    
+    public static class UI
+    {
+        public static Texture2D whitePixel;
+        public static Dictionary<char, Texture2D> charToTexture = new ();
+        static UI()
+        {
+            whitePixel = contentManager.Load<Texture2D>("white_pixel");
+            
+            var alphabet ="aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ" ;
+            foreach(var c in alphabet)
+            {
+                var assetName = char.IsLower(c) ? $"{c}" : char.ToLower(c) + "_";
+                charToTexture[c] = contentManager.Load<Texture2D>("characters/" + assetName);
+            }
+
+            var special = "!$%&(),.'-@[]^_`{}~+=";
+            foreach (var c in special)
+            {
+                charToTexture[c] = contentManager.Load<Texture2D>("characters/" + c);
+            }
+
+            var numbers = "0123456789";
+            foreach (var c in numbers)
+            {
+                charToTexture[c] = contentManager.Load<Texture2D>("characters/" + c);
+            }
+            
+            charToTexture['"'] = contentManager.Load<Texture2D>("characters/" + "bracket");
+            charToTexture['/'] = contentManager.Load<Texture2D>("characters/" + "slash");
+            charToTexture['\\'] = contentManager.Load<Texture2D>("characters/" + "backslash");
+            charToTexture[':'] = contentManager.Load<Texture2D>("characters/" + "colon");
+            charToTexture['>'] = contentManager.Load<Texture2D>("characters/" + "g_than");
+            charToTexture['<'] = contentManager.Load<Texture2D>("characters/" + "l_than");
+            charToTexture['?'] = contentManager.Load<Texture2D>("characters/" + "question_mark");
+            charToTexture['#'] = contentManager.Load<Texture2D>("characters/" + "sharp");
+            charToTexture['*'] = contentManager.Load<Texture2D>("characters/" + "star");
+            charToTexture[';'] = contentManager.Load<Texture2D>("characters/" + "semicolon");
+        }
+    }
 }

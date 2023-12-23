@@ -22,19 +22,21 @@ public class Door : Obj, IOpenable
         _impassible = AddComponent(new Impassible());
     }
 
-    public void Open()
+    public bool Open()
     {
-        if(!_closed) return;
+        if(!_closed) return false;
         _closed = false;
         _impassible.enabled = false;
         _appearance.texture = _textureOpened;
+        return true;
     }
     
-    public void Close()
+    public bool Close()
     {
-        if(_closed) return;
+        if(_closed) return false;
         _closed = true;
         _impassible.enabled = true;
         _appearance.texture = _textureClosed;
+        return true;
     }
 }

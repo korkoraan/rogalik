@@ -10,7 +10,7 @@ namespace rogalik.Objects;
 public class PlayerMind : Mind
 {
     public delegate void PlayerDidSmthHandler(Action action);
-    public event PlayerDidSmthHandler PlayerDidSmth = delegate { };   
+    public event PlayerDidSmthHandler PlayerDidSmth = delegate { };
     private Action _selectedAction;
     private Legs _legs;
     private Hand _hand;
@@ -62,7 +62,7 @@ public class PlayerMind : Mind
             {
                 case "open":
                     if (cell.contents.Find(o => o is IOpenable) is not IOpenable openable)
-                        C.Print("nothing to open");
+                        UIData.messages.Add("nothing to open");
                     else
                         _selectedAction = _hand.Open(openable);
                     break;
@@ -73,7 +73,10 @@ public class PlayerMind : Mind
         else
         {
             var enemy = owner.location[owner.point + step]?.contents.Find(o => o is Goblin);
-            _selectedAction = enemy is null ? _legs.StepTo(step) : _legs.Kick(enemy);
+            var ded = false;
+            if (enemy != null)
+                ded = enemy.GetComponent<Mind>().dead;
+            _selectedAction = enemy is null || ded ? _legs.StepTo(step) : _legs.Kick(enemy);
         }
         
         if(_selectedAction == null) return;

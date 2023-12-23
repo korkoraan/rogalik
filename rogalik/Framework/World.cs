@@ -5,6 +5,7 @@ using System.Numerics;
 using rogalik.Common;
 using rogalik.Components;
 using rogalik.Objects;
+using rogalik.Rendering;
 using Point = rogalik.Common.Point;
 
 namespace rogalik.Framework;
@@ -33,13 +34,14 @@ public abstract class Location
     public Cell[][,] cells;
     public List<Mind> minds = new();
     public List<World.WorldAction> worldActions = new();
+    public List<World.WorldAction> lastExecutedActions = new();
 
     public Location(World world)
     {
         this.world = world;
     }
 
-    public void TryMoving(Obj obj, Point point)
+    public bool TryMoving(Obj obj, Point point)
     {
         var x = obj.x;
         var y = obj.y;
@@ -50,7 +52,7 @@ public abstract class Location
             var cell = cells[z + point.z][x + point.x, y + point.y];
             var impassible = cell.contents.Find(o => o.HasComponent<Impassible>())?.GetComponent<Impassible>();
             if (impassible != null && impassible.enabled)
-                return;
+                return false;
             cells[z][x, y].contents.Remove(obj);
             obj.point += point;
             cell.contents.Add(obj);
@@ -58,7 +60,10 @@ public abstract class Location
         catch (IndexOutOfRangeException)    
         {
             C.Print($"cannot move {obj.GetType()} from {obj.point} to {point}: destination is out of bounds");
+            return false;
         }
+
+        return true;
     }
 
     public void Spawn(Obj obj)
@@ -110,15 +115,18 @@ public abstract class Location
         {
             if (w.endTime == world.time)
             {
-                w.action.Apply();
+                w.successful = w.action.Apply();
                 //TODO: should have some logic for spending and regenerating energy
                 var actor = w.action.actor;
+                if(actor is Player && w.action is MoveSelf && !w.successful)
+                    UIData.messages.Add("failed to go");
                 var mind = actor.GetComponent<Mind>();
                 if (mind is not null)
                     mind.energyCurrent += w.action.energyCost;
             }
         }
-        
+
+        lastExecutedActions = dueActions;
         worldActions = worldActions.Except(dueActions).ToList();
     }
 }
@@ -165,14 +173,15 @@ public class TestLevel : Location
 public sealed class World
 {
     private List<Location> _locations;
-    private PlayerMind _playerMind;
+    public PlayerMind playerMind;
     private BigInteger _time = 0;
     public BigInteger time => _time;
+    public delegate void WorldUpdatedHandler(IEnumerable<WorldAction> lastExecutedActions);
+    public event WorldUpdatedHandler WorldUpdated;
 
     private void Update(uint timeToUpdate)
     {
         var ticks = 0;
-        var s = "" + _time;
         while (ticks < timeToUpdate)
         {
             foreach (var location in _locations)
@@ -182,18 +191,17 @@ public sealed class World
             Tick();
             ticks++;
         }
-
-        s += "->" + _time;
-        C.Print(s);
+        //TODO: should return only actions that player sees
+        WorldUpdated?.Invoke(playerMind.owner.location.lastExecutedActions);
     }
     public World()
     {
         _locations = new() { new TestLevel(this, 100) };
         var player = new Player((5,5), _locations[0]);
         
-        _playerMind = player.GetComponent<PlayerMind>();
+        playerMind = player.GetComponent<PlayerMind>();
         _locations[0].Spawn(player);
-        _playerMind.PlayerDidSmth += OnPlayerDidSmth;
+        playerMind.PlayerDidSmth += OnPlayerDidSmth;
     }
 
     private void OnPlayerDidSmth(Action action)
@@ -220,6 +228,7 @@ public sealed class World
     {
         public readonly Action action;
         public readonly BigInteger startTime;
+        public bool successful;
         public BigInteger endTime => startTime + action.duration - 1; 
     
         public WorldAction(Action action, BigInteger startTime)
