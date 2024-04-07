@@ -1,240 +1,163 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using rogalik.Common;
-using rogalik.Components;
-using rogalik.Objects;
+using rogalik.AI;
+using rogalik.Combat;
+using rogalik.Items;
 using rogalik.Rendering;
-using Point = rogalik.Common.Point;
+using rogalik.Walking;
+using rogalik.WorldGen;
 
 namespace rogalik.Framework;
 
-public class Cell
-{
-    public readonly Point pos;
-    public readonly List<Obj> contents;
-
-    public Cell(Point pos)
-    {
-        this.pos = pos;
-        contents = new List<Obj>();
-    }
-    
-    public Cell(Point pos, List<Obj> contents)
-    {
-        this.pos = pos;
-        this.contents = contents;
-    }
-}
-
-public abstract class Location
-{
-    protected readonly World world;
-    public Cell[][,] cells;
-    public List<Mind> minds = new();
-    public List<World.WorldAction> worldActions = new();
-    public List<World.WorldAction> lastExecutedActions = new();
-
-    public Location(World world)
-    {
-        this.world = world;
-    }
-
-    public bool TryMoving(Obj obj, Point point)
-    {
-        var x = obj.x;
-        var y = obj.y;
-        var z = obj.z;
-
-        try
-        {
-            var cell = cells[z + point.z][x + point.x, y + point.y];
-            var impassible = cell.contents.Find(o => o.HasComponent<Impassible>())?.GetComponent<Impassible>();
-            if (impassible != null && impassible.enabled)
-                return false;
-            cells[z][x, y].contents.Remove(obj);
-            obj.point += point;
-            cell.contents.Add(obj);
-        }
-        catch (IndexOutOfRangeException)    
-        {
-            C.Print($"cannot move {obj.GetType()} from {obj.point} to {point}: destination is out of bounds");
-            return false;
-        }
-
-        return true;
-    }
-
-    public void Spawn(Obj obj)
-    {
-        try
-        {
-            var cell = cells[obj.z][obj.x, obj.y];
-            cell.contents.Add(obj);
-            var mind = obj.GetComponent<Mind>();
-            if(mind is not null)
-                minds.Add(mind);
-            obj.Init();
-        }
-        catch (IndexOutOfRangeException)    
-        {
-            C.Print($"cannot spawn {obj.GetType()} at {obj.point}: destination is out of bounds");
-        }
-    }
-
-    public Cell this[Point point]
-    {
-        get
-        {
-            var z = point.z;
-            var x = point.x;
-            var y = point.y;
-            if (cells.Length < z || z < 0 || cells[z].GetLength(0) < x || x < 0 || cells[z].GetLength(1) < y || y < 0)
-                return null;
-            return cells[z][x, y];
-        }
-    }
-
-    public void Update()
-    {
-        foreach (var mind in minds)
-        {
-            if (mind.dead) continue;
-            var action = mind.ChooseNextAction();
-            if(action is null) continue;
-            if(action.energyCost > mind.energyCurrent) continue;
-            mind.energyCurrent -= action.energyCost;
-            worldActions.Add(world.CreateWorldAction(action));
-        }
-
-        minds.RemoveAll(m => m.dead);
-
-        var dueActions = worldActions.Where(w => w.endTime == world.time).ToList();
-        foreach (var w in dueActions)
-        {
-            if (w.endTime == world.time)
-            {
-                w.successful = w.action.Apply();
-                //TODO: should have some logic for spending and regenerating energy
-                var actor = w.action.actor;
-                if(actor is Player && w.action is MoveSelf && !w.successful)
-                    UIData.messages.Add("failed to go");
-                var mind = actor.GetComponent<Mind>();
-                if (mind is not null)
-                    mind.energyCurrent += w.action.energyCost;
-            }
-        }
-
-        lastExecutedActions = dueActions;
-        worldActions = worldActions.Except(dueActions).ToList();
-    }
-}
-
-public class TestLevel : Location
-{
-    public TestLevel(World world, int size) : base(world)
-    {
-        cells = new Cell[1][,];
-        cells[0] = new Cell[size, size];
-        for (var x = 0; x < size; x++)
-        {
-            for (int y = 0; y < size; y++)
-            {
-                cells[0][x, y] = new Cell(new Point(x, y));
-                Spawn(new Surface((x, y), this));
-            } 
-        }
-
-        var lastWidth = 0;
-        var lastStart = new Point(1, 10);
-        var rooms = Rnd.NewInt(5, 10);
-        for (int i = 0; i < rooms; i++)
-        {
-            var newStart = new Point(lastWidth + lastStart.x + 1, lastStart.y);
-            var newWidth = (uint)Rnd.NewInt(4, 10);
-            var room = new EmptyRoom(this,  newStart , newWidth, (uint)Rnd.NewInt(4,10));
-        
-            foreach (var o in room.objects)
-            {
-                if(o is null) continue;
-                Spawn(o);
-            }
-
-            lastStart = newStart;
-            lastWidth = (int)newWidth;
-        }
-        
-        Spawn(new Goblin((0,0),this));
-        Spawn(new Spirit((3,3),this));
-    }
-}
-
 public sealed class World
 {
-    private List<Location> _locations;
-    public PlayerMind playerMind;
+    private Game1 _game;
     private BigInteger _time = 0;
     public BigInteger time => _time;
-    public delegate void WorldUpdatedHandler(IEnumerable<WorldAction> lastExecutedActions);
-    public event WorldUpdatedHandler WorldUpdated;
+    public delegate void WorldUpdatedHandler();
 
+    public event WorldUpdatedHandler StartedUpdate;
+    public event WorldUpdatedHandler FinishedUpdate;
+    
+    public List<Obj> objects = new ();
+    private List<GameSystem> _systems = new ();
+    public Obj player;
+    public bool initialized { get; private set; }
+    public bool paused { get; private set; }
+    
+    public World(Game1 game)
+    {
+        _game = game;
+        player = new Obj();
+        _systems.Add(new WorldGenSystem(this));
+        _systems.Add(new PlayerActivityMonitorSystem(this));
+        _systems.Add(new SimpleMindSystem(this));
+        _systems.Add(new WalkingSystem(this));
+        _systems.Add(new VelocitySystem(this));
+        _systems.Add(new MeleeSystem(this));
+        _systems.Add(new PhysicalDmgSystem(this));
+        _systems.Add(new DestructionSystem(this));
+        _systems.Add(new PickingSystem(this));
+        _systems.Add(new DroppingSystem(this));
+
+        foreach (var gameSystem in _systems.FindAll(s => s is IInitSystem))
+        {
+            (gameSystem as IInitSystem)?.Init();
+        }
+        
+        initialized = true;
+        _game.input.InputActionsPressed += OnActionPressed;
+    }
+
+    public IEnumerable<(Point, Obj)> InRange(Point center, int range)
+    {
+        foreach (var obj in objects)
+        {
+            var pos = obj.GetComponent<Position>();
+            if (pos is null) continue;
+            if (pos.point.InRange(center - (int)range, center + (int)range))
+                yield return (pos.point, obj);
+        }
+    }
+    
     private void Update(uint timeToUpdate)
     {
-        var ticks = 0;
-        while (ticks < timeToUpdate)
+        if(paused) return;
+        _time += timeToUpdate;
+        UIData.AddLogMessage(_time.ToString());
+        foreach (var system in _systems)
         {
-            foreach (var location in _locations)
-            {
-                location.Update();
-            }
-            Tick();
-            ticks++;
+            system.Update(timeToUpdate);
         }
-        //TODO: should return only actions that player sees
-        WorldUpdated?.Invoke(playerMind.owner.location.lastExecutedActions);
+        FinishedUpdate?.Invoke();
     }
-    public World()
+    
+    public IEnumerable<(Point, Obj)> GetVisibleObjects()
     {
-        _locations = new() { new TestLevel(this, 100) };
-        var player = new Player((5,5), _locations[0]);
+        var point = player.GetComponent<Position>()?.point;
+        return point == null ? default : InRange(player.GetComponent<Position>().point, 10);
+    }
+
+    public IEnumerable<Obj> GetObjectsAt(Point point)
+    {
+        return objects.Where(obj => obj.GetComponent<Position>()?.point == point);
+    }
+
+    public void Pause()
+    {
+        paused = true;
+    }
+
+    public void Resume()
+    {
+        paused = false;
+    }
+
+    private void OnActionPressed(List<InputAction> inputActions)
+    {
+        var didSmth = false;
+        var playerPos = player.GetComponent<Position>();
+        if(playerPos == null) return;
         
-        playerMind = player.GetComponent<PlayerMind>();
-        _locations[0].Spawn(player);
-        playerMind.PlayerDidSmth += OnPlayerDidSmth;
-    }
-
-    private void OnPlayerDidSmth(Action action)
-    {
-        Update(action.duration);
-    }
-    
-    public Cell[,] GetVisibleCells()
-    {
-        return _locations[0].cells[0];
-    }
-
-    private void Tick()
-    {
-        _time++;
-    }
-
-    public WorldAction CreateWorldAction(Action action)
-    {
-        return new WorldAction(action, _time);
-    }
-    
-    public class WorldAction
-    {
-        public readonly Action action;
-        public readonly BigInteger startTime;
-        public bool successful;
-        public BigInteger endTime => startTime + action.duration - 1; 
-    
-        public WorldAction(Action action, BigInteger startTime)
+        Point step = default;
+        if (inputActions.Contains(InputAction.goUp))
+            step = (0, -1);
+        if (inputActions.Contains(InputAction.goDown))
+            step = (0, 1);
+        if (inputActions.Contains(InputAction.goLeft))
+            step = (-1, 0);
+        if (inputActions.Contains(InputAction.goRight))
+            step = (1, 0);
+        if (inputActions.Contains(InputAction.goUpRight))
+            step = (1, -1);
+        if (inputActions.Contains(InputAction.goDownRight))
+            step = (1, 1);
+        if (inputActions.Contains(InputAction.goUpLeft))
+            step = (-1, -1);
+        if (inputActions.Contains(InputAction.goDownLeft))
+            step = (-1, 1);
+        if (step != default)
         {
-            this.action = action;
-            this.startTime = startTime;
+            player.AddComponent(new ActionWalk(step));
+            didSmth = true;
         }
+        var smthToHit = GetObjectsAt(playerPos.point + step).ToList().Find(o => o.HasComponent<AI.Mind>());
+        if (smthToHit != null)
+        {
+            var weapon = new Obj();
+            player.AddComponent(new ActionHit(weapon, smthToHit));
+            didSmth = true;
+        }
+        // else if (step != (0, 0))
+        // {
+        //     player.AddComponent(new ActionWalk(step));
+        //     didSmth = true;
+        // }
+        // else if (keys.Contains(Keys.P))
+        // {
+        //     var items = _world.GetObjectsAt(playerPos.point).ToList();
+        //     items.Remove(player);
+        //     items.RemoveAll(o => o.GetComponent<Appearance>()?.description == "rock surface");
+        //     switch (items.Count)
+        //     {
+        //         case 1:
+        //             player.AddComponent(new ActionPick(items.First()));
+        //             UIData.AddLogMessage($"you pick up a {items.First()}");
+        //             break;
+        //         case > 1:
+        //             _game.renderer.ChooseItemToPick(items);
+        //             break;
+        //         default:
+        //             UIData.AddLogMessage("nothing to pick up");
+        //             break;
+        //     }
+        // }
+        // else if (keys.Contains(Keys.D))
+        // {
+        // }
+        //
+        if(didSmth)
+            Update(1);
     }
 }

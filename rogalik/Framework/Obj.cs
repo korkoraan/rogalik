@@ -1,56 +1,67 @@
+using System.Collections;
 using System.Collections.Generic;
 using rogalik.Common;
 
 namespace rogalik.Framework;
 
-public abstract class Obj
+public class Obj : IEnumerable
 {
-    public Location location;
-    private List<Component> _components = new ();
-    public Point point;
-    
-    public int x => point.x;
-    public int y => point.y;
-    public int z => point.z;
+    public List<IComponent> components = new();
 
-    protected Obj(Point point, Location location)
+    public Obj()
     {
-        this.point = point;
-        this.location = location;
     }
     
-    public TComponent GetComponent<TComponent>() where TComponent: Component
+    public Obj(IEnumerable<IComponent> components)
     {
-        return (TComponent)_components.Find(c => c is TComponent);
-    }
-
-    public List<Component> GetAllComponents<T>()
-    {
-        return _components.FindAll(c => c is T);
+        foreach (var component in components)
+        {
+            this.components.Add(component);
+        }
     }
     
-    public TComponent AddComponent<TComponent>(TComponent component) where TComponent : Component
+    public TComponent GetComponent<TComponent>() where TComponent : IComponent
     {
-        _components.Add(component);
-        component.owner = this;
-        return component;
+        return (TComponent)components.Find(c => c is TComponent);
     }
 
-    public bool HasComponent<TComponent>() where TComponent : Component
+    public List<IComponent> GetAllComponents<T>()
     {
-        return _components.Exists(c => c is TComponent);
+        return components.FindAll(c => c is T);
+    }
+
+    public Obj AddComponent<TComponent>(TComponent component) where TComponent :  IComponent
+    {
+        components.Add(component);
+        return this;
+    }
+
+    public bool HasComponent<TComponent>() where TComponent : IComponent
+    {
+        return components.Exists(c => c is TComponent);
     }
 
     public void Init()
     {
-        foreach (var c in _components)
-        {
-            c.Init();
-        }
     }
 
-    public void RemoveComponent(Component component)
+    public void RemoveComponent(IComponent component)
     {
-        _components.Remove(component);
+        components.Remove(component);
+    }
+
+    public override string ToString()
+    {
+        return GetComponent<Appearance>()?.description ?? "unknown object";
+    }
+
+    public void Add(IComponent component)
+    {
+        components.Add(component);
+    }
+
+    public IEnumerator GetEnumerator()
+    {
+        return components.GetEnumerator();
     }
 }

@@ -18,10 +18,18 @@ public static class R
         public static readonly Texture2D playerWarrior;
         public static readonly Texture2D goblinUnarmed;
         public static readonly Texture2D spirit;
+        public static readonly Texture2D stoneGolem;
+        public static readonly Texture2D treant;
+        public static readonly Texture2D cat;
         public static readonly List<Texture2D> surfaceRock;
         public static readonly List<Texture2D> wallRock;
         public static readonly List<Texture2D> door;
         public static readonly Texture2D doorOpened;
+        public static readonly Texture2D skullAndBones;
+        public static readonly Texture2D ironHelmet;
+        public static readonly Texture2D plateArmor;
+        public static readonly Texture2D sword;
+        public static readonly Texture2D shield;
 
         static Tiles()
         {
@@ -32,6 +40,14 @@ public static class R
             wallRock = Load("wall_rock", 2);
             door = Load("door", 3);
             doorOpened = Load("door_opened");
+            stoneGolem = Load("stone_golem");
+            treant = Load("treant");
+            cat = Load("cat");
+            skullAndBones = Load("skull_and_bones");
+            ironHelmet = Load("iron_helmet");
+            plateArmor = Load("plate_armor");
+            sword = Load("sword");
+            shield = Load("shield");
         }
         private static Texture2D Load(string assetName)
         {

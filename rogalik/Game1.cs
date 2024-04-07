@@ -3,16 +3,30 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using rogalik.Framework;
 using rogalik.Rendering;
+using Myra;
+using Myra.Graphics2D.UI;
 
 namespace rogalik;
 
 public class Game1 : Game
 {
+    public enum State
+    {
+        idle,
+        usingUI,
+        gameplay
+    }
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
-    private Renderer _renderer;
-    private World _world;
+    public Renderer renderer;
     private SpriteFont _font;
+    public Desktop desktop;
+    // somebody could just reset the world at any given time
+    // but I'm so tired this evening
+    public World world;
+    public readonly Input input;
+    public State state { get; private set; }
+    
 
     // 1
     public Game1()
@@ -20,6 +34,7 @@ public class Game1 : Game
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
+        input = new Input(this);
     }
 
     // 2 within the base.Initialize
@@ -27,12 +42,13 @@ public class Game1 : Game
     {
         // should always be the first line
         base.Initialize();
-        _world = new World();
-        _renderer = new Renderer(new (1920, 1080), _spriteBatch, _world);
+        world = new World(this);
+        renderer.Init();
+        input.Init();
         
-        _graphics.PreferredBackBufferWidth = _renderer.windowSize.x;
-        _graphics.PreferredBackBufferHeight = _renderer.windowSize.y;
-        _graphics.ToggleFullScreen();
+        _graphics.PreferredBackBufferWidth = renderer.windowSize.X;
+        _graphics.PreferredBackBufferHeight = renderer.windowSize.Y;
+        // _graphics.ToggleFullScreen();
         _graphics.ApplyChanges();
     }
 
@@ -41,6 +57,11 @@ public class Game1 : Game
     {
         R.contentManager = Content;
         _spriteBatch = new SpriteBatch(GraphicsDevice);
+        
+        MyraEnvironment.Game = this;
+        renderer = new Renderer(this, new (1920, 1080), _spriteBatch);
+        desktop = new Desktop();
+        renderer.InitUI(desktop);
     }
 
     protected override void Update(GameTime gameTime)
@@ -49,21 +70,32 @@ public class Game1 : Game
             Keyboard.GetState().IsKeyDown(Keys.Escape))
             Exit();
 
-        Input.Update(gameTime);
+        input.Update(gameTime);
         base.Update(gameTime);
     }
     
     protected override void Draw(GameTime gameTime)
     {
-        _spriteBatch.Begin(transformMatrix: _renderer.GetTransformMatrix(), samplerState: SamplerState.PointClamp);
-        _renderer.DrawCells();
+        if(!world.initialized) return;
+        _spriteBatch.Begin(transformMatrix: renderer.GetTransformMatrix(), samplerState: SamplerState.PointClamp);
+        renderer.DrawVisibleArea();
         GraphicsDevice.Clear(Color.Black);
         _spriteBatch.End();
         
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
-        _renderer.DrawUI();
+        desktop.Render();
         _spriteBatch.End();
         
         base.Draw(gameTime);
+    }
+
+    public void Pause()
+    {
+        world.Pause();
+    }
+
+    public void Resume()
+    {
+        world.Resume();
     }
 }
