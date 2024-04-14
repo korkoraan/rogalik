@@ -79,7 +79,7 @@ public class Renderer
         _world = _game.world;
         GetVisibleObjects();
         _world.FinishedUpdate += OnFinishedUpdate;
-        _mainCamera = new Camera(_world, _world.player);
+        _mainCamera = new Camera(_game, _world.player);
         UIData.LogUpdated += OnLogUpdated;
         _game.desktop.TouchDown += ShowOptions;
     }

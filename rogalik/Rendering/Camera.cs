@@ -19,26 +19,26 @@ class Camera
         game.input.InputActionsPressed += OnInputActionsPressed;
     }
 
-    public Camera(World world, Obj obj)
+    public Camera(Game1 game, Obj obj)
     {
         pos = obj.GetComponent<Position>().point;
-        world.FinishedUpdate += () => pos = obj.GetComponent<Position>().point;;
+        game.world.FinishedUpdate += () => pos = obj.GetComponent<Position>().point;;
+        game.input.InputActionsPressed += OnInputActionsPressed;
     }
     
     private void OnInputActionsPressed(List<InputAction> keys)
     {
-        if(keys.Contains(InputAction.goUp))
+        if(keys.Contains(InputAction.moveCameraUp))
             pos.y -= 1;
-        if(keys.Contains(InputAction.goLeft))
+        if(keys.Contains(InputAction.moveCameraLeft))
             pos.x -= 1;
-        if(keys.Contains(InputAction.goDown))
+        if(keys.Contains(InputAction.moveCameraDown))
             pos.y += 1;
-        if(keys.Contains(InputAction.goRight))
+        if(keys.Contains(InputAction.moveCameraRight))
             pos.x += 1;
-        //TODO: add zoom to input bindings
-        // if(keys.Contains(Keys.PageUp))
-            // zoom -= 0.1f;
-        // if(keys.Contains(Keys.PageDown))
-            // zoom += 0.1f;
+        if(keys.Contains(InputAction.zoomOut))
+            zoom -= 0.1f;
+        if(keys.Contains(InputAction.zoomIn))
+            zoom += 0.1f;
     }
 }

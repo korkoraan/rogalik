@@ -33,7 +33,13 @@ public enum InputAction
     goUpRight,
     goDownLeft,
     goUpLeft,
-    toggleInventory
+    toggleInventory,
+    zoomOut,
+    zoomIn,
+    moveCameraUp,
+    moveCameraDown,
+    moveCameraLeft,
+    moveCameraRight
 }
 
 /// <summary>
@@ -144,17 +150,25 @@ public class Input
         [new[] { Keys.I }] = InputAction.toggleInventory,
         [new[] { Keys.D }] = InputAction.drop,
         [new[] { Keys.P }] = InputAction.pickUp,
+        [new[] { Keys.PageDown }] = InputAction.zoomIn,
+        [new[] { Keys.PageUp }] = InputAction.zoomOut,
+        [new[] { Keys.NumPad8 }] = InputAction.moveCameraUp,
+        [new[] { Keys.NumPad2 }] = InputAction.moveCameraDown,
+        [new[] { Keys.NumPad4 }] = InputAction.moveCameraLeft,
+        [new[] { Keys.NumPad6 }] = InputAction.moveCameraRight,
     };
+
+    private List<InputAction> _lastInputActions = new();
     
-    private void InvokeInputActions(List<Keys> keysList)
+    private void InvokeInputActions(ICollection<Keys> keysList)
     {
-        var inputActions = new List<InputAction>();
+        _lastInputActions.Clear();
         foreach (var (keys, action) in _keyBindings)
         {
             if(keys.All(key => keysList.Contains(key))) 
-                inputActions.Add(action);
+                _lastInputActions.Add(action);
         }
-        InputActionsPressed?.Invoke(inputActions);
+        InputActionsPressed?.Invoke(_lastInputActions);
     }
 
     /// <summary>
