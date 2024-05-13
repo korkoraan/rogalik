@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using rogalik.Abilities;
+using rogalik.Framework;
 using rogalik.Items;
 
-namespace rogalik.Framework;
+namespace rogalik.Common;
 
 public static class ObjExtensions
 {
@@ -12,7 +14,6 @@ public static class ObjExtensions
         {
             yield return item;
         }
-        
         // var containers = obj.GetComponent<Gear>()?.items.FindAll(o => o.HasComponent<Container>()) ?? new List<Obj>();
         // var selfContainer = obj.GetComponent<Container>();
         // if(selfContainer != null) containers?.Add(obj); 
@@ -20,5 +21,16 @@ public static class ObjExtensions
         // {
         // yield return container.GetComponent<Container>();
         // }
+    }
+
+    public static IEnumerable<Obj> Abilities(this Obj obj)
+    {
+        var abilities = obj.GetComponent<PossessedAbilities>();
+
+        if (abilities?.items == null) yield break;
+        foreach (var abilityObj in abilities.items)
+        {
+            yield return abilityObj;
+        }
     }
 }
