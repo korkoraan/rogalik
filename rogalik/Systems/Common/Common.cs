@@ -1,6 +1,6 @@
 using rogalik.Framework;
 
-namespace rogalik.Common;
+namespace rogalik.Systems.Common;
 
 public class Density : IComponent
 {

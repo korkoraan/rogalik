@@ -1,9 +1,9 @@
 using System.Numerics;
 using rogalik.Framework;
 using rogalik.Rendering;
-using rogalik.Walking;
+using rogalik.Systems.Walking;
 
-namespace rogalik.Items;
+namespace rogalik.Systems.Items;
 
 public class IntentDrop : IComponent
 {

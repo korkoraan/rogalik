@@ -4,7 +4,8 @@ using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 using rogalik.Common;
 using rogalik.Framework;
-using rogalik.Items;
+using rogalik.Systems.Common;
+using rogalik.Systems.Items;
 
 namespace rogalik.Rendering.UIElements;
 

@@ -1,14 +1,14 @@
-using System.Collections.Generic;
-using rogalik.Abilities;
-using rogalik.AI;
 using rogalik.Combat;
 using rogalik.Common;
 using rogalik.Framework;
-using rogalik.Items;
 using rogalik.Rendering;
-using rogalik.Walking;
+using rogalik.Systems.Abilities;
+using rogalik.Systems.AI;
+using rogalik.Systems.Common;
+using rogalik.Systems.Items;
+using rogalik.Systems.Walking;
 
-namespace rogalik.WorldGen;
+namespace rogalik.Systems.WorldGen;
 
 public class WorldGenSystem : GameSystem, IInitSystem
 {

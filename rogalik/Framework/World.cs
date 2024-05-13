@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using rogalik.AI;
 using rogalik.Combat;
-using rogalik.Items;
 using rogalik.Rendering;
-using rogalik.Walking;
-using rogalik.WorldGen;
+using rogalik.Systems.AI;
+using rogalik.Systems.Items;
+using rogalik.Systems.Walking;
+using rogalik.Systems.WorldGen;
 
 namespace rogalik.Framework;
 

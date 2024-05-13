@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using rogalik.Abilities;
 using rogalik.Framework;
-using rogalik.Items;
+using rogalik.Systems.Abilities;
+using rogalik.Systems.Items;
 
-namespace rogalik.Common;
+namespace rogalik.Systems.Common;
 
 public static class ObjExtensions
 {

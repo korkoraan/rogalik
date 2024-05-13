@@ -1,8 +1,8 @@
 using rogalik.Common;
 using rogalik.Framework;
-using rogalik.Walking;
+using rogalik.Systems.Walking;
 
-namespace rogalik.AI;
+namespace rogalik.Systems.AI;
 
 public class SimpleMindSystem : GameSystem
 {

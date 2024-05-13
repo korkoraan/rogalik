@@ -1,8 +1,6 @@
-using System.Linq;
 using rogalik.Framework;
-using rogalik.Rendering;
 
-namespace rogalik.Walking;
+namespace rogalik.Systems.Walking;
 
 public class Leg : IComponent
 {

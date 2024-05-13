@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using rogalik.Common;
 using rogalik.Framework;
-using rogalik.Walking;
+using rogalik.Systems.Walking;
 using Point = rogalik.Framework.Point;
 
 namespace rogalik.Rendering;

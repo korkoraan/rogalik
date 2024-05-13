@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using rogalik.Framework;
-using rogalik.Walking;
+using rogalik.Systems.Walking;
 
-namespace rogalik.Items;
+namespace rogalik.Systems.Items;
 
 public class Gear : IComponent
 {

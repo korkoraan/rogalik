@@ -1,7 +1,4 @@
-using rogalik.Common;
-using rogalik.Framework;
-
-namespace rogalik.Time;
+namespace rogalik.Systems.Time;
 
 // public class ActionSystem : GameSystem
 // {

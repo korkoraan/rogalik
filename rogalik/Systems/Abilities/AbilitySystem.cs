@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using rogalik.Framework;
 
-namespace rogalik.Abilities;
+namespace rogalik.Systems.Abilities;
 
 public class Ability : IComponent
 {

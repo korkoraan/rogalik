@@ -1,6 +1,6 @@
 using rogalik.Framework;
 
-namespace rogalik.Walking;
+namespace rogalik.Systems.Walking;
 
 public class Position : IComponent
 {

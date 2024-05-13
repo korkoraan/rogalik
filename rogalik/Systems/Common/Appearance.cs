@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using rogalik.Framework;
 
-namespace rogalik.Common;
+namespace rogalik.Systems.Common;
 
 /// <summary>
 /// How an object looks like.

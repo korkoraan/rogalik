@@ -1,4 +1,4 @@
-namespace rogalik.Common;
+namespace rogalik.Systems.Common;
 
 public static class Standarts
 {

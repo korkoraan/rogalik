@@ -3,10 +3,11 @@ using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
-using rogalik.AI;
 using rogalik.Common;
 using rogalik.Framework;
 using rogalik.Rendering.UIElements;
+using rogalik.Systems.AI;
+using rogalik.Systems.Common;
 using Point = rogalik.Framework.Point;
 using XnaPoint = Microsoft.Xna.Framework.Point;
 
