@@ -65,7 +65,6 @@ public sealed class World
     {
         if(paused) return;
         _time += timeToUpdate;
-        UIData.AddLogMessage(_time.ToString());
         foreach (var system in _systems)
         {
             system.Update(timeToUpdate);
@@ -117,16 +116,16 @@ public sealed class World
             step = (-1, -1);
         if (inputActions.Contains(InputAction.goDownLeft))
             step = (-1, 1);
-        if (step != default)
-        {
-            player.AddComponent(new ActionWalk(step));
-            didSmth = true;
-        }
-        var smthToHit = GetObjectsAt(playerPos.point + step).ToList().Find(o => o.HasComponent<AI.Mind>());
+        var smthToHit = GetObjectsAt(playerPos.point + step).ToList().Find(o => o.HasComponent<Mind>());
         if (smthToHit != null)
         {
             var weapon = new Obj();
             player.AddComponent(new ActionHit(weapon, smthToHit));
+            didSmth = true;
+        }
+        else if( step != default )
+        {
+            player.AddComponent(new ActionWalk(step));
             didSmth = true;
         }
         // else if (step != (0, 0))

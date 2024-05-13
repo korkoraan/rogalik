@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using rogalik.Abilities;
 using rogalik.AI;
 using rogalik.Combat;
 using rogalik.Common;
@@ -101,10 +102,10 @@ public class WorldGenSystem : GameSystem, IInitSystem
             new Inventory
             {
                 Sword(),
-                // Sword(),
-                // Sword(),
-                // Sword(),
-                // Sword(),
+            },
+            new PossessedAbilities
+            {
+                BestAbility()
             }
         };
 
@@ -135,9 +136,14 @@ public class WorldGenSystem : GameSystem, IInitSystem
         return sword;
     }
 
+    private Obj BestAbility()
+    {
+        return new Obj { new Ability("Angst", "Feel the weight of the world on your shoulders") };
+    }
+    
     private void MakeRigid(Obj obj)
     {
         // var 
         // obj.AddComponent(new Rigid());
-    } 
+    }
 } 

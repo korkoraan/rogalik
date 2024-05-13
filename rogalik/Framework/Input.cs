@@ -1,13 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using rogalik.Combat;
-using rogalik.Common;
-using rogalik.Items;
-using rogalik.Rendering;
-using rogalik.Walking;
 
 namespace rogalik.Framework;
 
@@ -28,7 +22,6 @@ public enum InputAction
     goRight,
     pickUp,
     drop,
-    hit,
     goDownRight,
     goUpRight,
     goDownLeft,
@@ -39,11 +32,23 @@ public enum InputAction
     moveCameraUp,
     moveCameraDown,
     moveCameraLeft,
-    moveCameraRight
+    moveCameraRight,
+    toggleAbilitiesMenu,
+    exitWindow,
+    ability1,
+    ability2,
+    ability3,
+    ability4,
+    ability5,
+    ability6,
+    ability7,
+    ability8,
+    ability9,
+    ability10
 }
 
 /// <summary>
-/// Subscribe to KeyPressed to listen for any pressed keys.
+/// Subscribe to InputActionsPressed to listen for input actions.
 /// <param name="_delay">number of milliseconds waited for player to enter a key combination</param>
 /// </summary>
 public class Input
@@ -55,9 +60,6 @@ public class Input
 
     public delegate void MouseClickHandler(MouseState mouseState);
     public event MouseClickHandler OnMouseClick;
-
-    public delegate void ActionChosenHandler();
-    public event ActionChosenHandler ActionChosen;
 
     private List<Keys> _pressedKeys = new ();
     private List<Keys> _unpressedKeys = new ();
@@ -80,17 +82,11 @@ public class Input
         _game = game;
         _delay = 50;
         _remainingDelay = _delay;
-        InputActionsPressed += OnActionPressed;
     }
 
     public void Init()
     {
         _world = _game.world;
-    }
-
-    private void OnActionPressed(List<InputAction> actions)
-    {
-        
     }
     
     public void Update(GameTime gameTime)
@@ -137,33 +133,46 @@ public class Input
             
     }
 
-    private Dictionary<IEnumerable<Keys>, InputAction> _keyBindings = new()
+    //TODO: able to rewrite at runtime, not good
+    public readonly Dictionary<InputAction, IEnumerable<Keys>> keyBindings = new()
     {
-        [new[] { Keys.Up }] = InputAction.goUp,
-        [new[] { Keys.Down }] = InputAction.goDown,
-        [new[] { Keys.Left }] = InputAction.goLeft,
-        [new[] { Keys.Right }] = InputAction.goRight,
-        [new[] { Keys.Right, Keys.Down }] = InputAction.goDownRight,
-        [new[] { Keys.Right, Keys.Up }] = InputAction.goUpRight,
-        [new[] { Keys.Left, Keys.Down }] = InputAction.goDownLeft,
-        [new[] { Keys.Left, Keys.Up }] = InputAction.goUpLeft,
-        [new[] { Keys.I }] = InputAction.toggleInventory,
-        [new[] { Keys.D }] = InputAction.drop,
-        [new[] { Keys.P }] = InputAction.pickUp,
-        [new[] { Keys.PageDown }] = InputAction.zoomIn,
-        [new[] { Keys.PageUp }] = InputAction.zoomOut,
-        [new[] { Keys.NumPad8 }] = InputAction.moveCameraUp,
-        [new[] { Keys.NumPad2 }] = InputAction.moveCameraDown,
-        [new[] { Keys.NumPad4 }] = InputAction.moveCameraLeft,
-        [new[] { Keys.NumPad6 }] = InputAction.moveCameraRight,
+        [InputAction.goUp] = new []{ Keys.Up},
+        [InputAction.goDown] = new []{ Keys.Down },
+        [InputAction.goLeft] = new []{ Keys.Left },
+        [InputAction.goRight] = new []{ Keys.Right },
+        [InputAction.goDownLeft] = new []{ Keys.Down, Keys.Left },
+        [InputAction.goDownRight] = new []{ Keys.Down, Keys.Right },
+        [InputAction.goUpLeft] = new []{ Keys.Up, Keys.Left },
+        [InputAction.goUpRight] = new []{ Keys.Up, Keys.Right },
+        [InputAction.toggleInventory] = new []{ Keys.I },
+        [InputAction.drop] = new []{ Keys.D },
+        [InputAction.pickUp] = new []{ Keys.P },
+        [InputAction.zoomIn] = new []{ Keys.PageDown },
+        [InputAction.zoomOut] = new []{ Keys.PageUp },
+        [InputAction.moveCameraUp] = new []{ Keys.NumPad8 },
+        [InputAction.moveCameraDown] = new []{ Keys.NumPad2 },
+        [InputAction.moveCameraLeft] = new []{ Keys.NumPad4 },
+        [InputAction.moveCameraRight] = new []{ Keys.NumPad6 },
+        [InputAction.toggleAbilitiesMenu] = new []{ Keys.A },
+        [InputAction.exitWindow] = new []{ Keys.Escape },
+        [InputAction.ability1] = new []{ Keys.D1 },
+        [InputAction.ability2] = new []{ Keys.D2 },
+        [InputAction.ability3] = new []{ Keys.D3 },
+        [InputAction.ability4] = new []{ Keys.D4 },
+        [InputAction.ability5] = new []{ Keys.D5 },
+        [InputAction.ability6] = new []{ Keys.D6 },
+        [InputAction.ability7] = new []{ Keys.D7 },
+        [InputAction.ability8] = new []{ Keys.D8 },
+        [InputAction.ability9] = new []{ Keys.D9 },
+        [InputAction.ability10] = new []{ Keys.D0 },
     };
-
+    
     private List<InputAction> _lastInputActions = new();
     
     private void InvokeInputActions(ICollection<Keys> keysList)
     {
         _lastInputActions.Clear();
-        foreach (var (keys, action) in _keyBindings)
+        foreach (var (action, keys) in keyBindings)
         {
             if(keys.All(key => keysList.Contains(key))) 
                 _lastInputActions.Add(action);

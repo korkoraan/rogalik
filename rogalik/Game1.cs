@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using System.IO;
+using FontStashSharp;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using rogalik.Framework;
@@ -19,14 +22,12 @@ public class Game1 : Game
     private GraphicsDeviceManager _graphics;
     private SpriteBatch _spriteBatch;
     public Renderer renderer;
-    private SpriteFont _font;
     public Desktop desktop;
     // somebody could just reset the world at any given time
     // but I'm so tired this evening
     public World world;
     public readonly Input input;
     public State state { get; private set; }
-    
 
     // 1
     public Game1()
@@ -55,11 +56,17 @@ public class Game1 : Game
     // 3 
     protected override void LoadContent()
     {
+        base.LoadContent();
         R.contentManager = Content;
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         
         MyraEnvironment.Game = this;
-        renderer = new Renderer(this, new (1920, 1080), _spriteBatch);
+        
+        var fontSystem = new FontSystem();
+        //TODO: can't load fonts
+        // fontSystem.AddFont(File.ReadAllBytes(path));
+        
+        renderer = new Renderer(this, new (1920, 1080), _spriteBatch, fontSystem);
         desktop = new Desktop();
         renderer.InitUI(desktop);
     }
@@ -85,7 +92,6 @@ public class Game1 : Game
         _spriteBatch.Begin(samplerState: SamplerState.PointClamp);
         desktop.Render();
         _spriteBatch.End();
-        
         base.Draw(gameTime);
     }
 

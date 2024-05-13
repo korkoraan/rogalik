@@ -7,7 +7,7 @@ namespace rogalik.Rendering;
 public static class R
 {
     public static ContentManager contentManager;
-    
+
     /// <summary>
     /// To add your tile texture declare a static field with a list of textures or a single texture.
     /// Then in a constructor specify tile name.
@@ -71,40 +71,35 @@ public static class R
     public static class UI
     {
         public static Texture2D whitePixel;
-        public static Dictionary<char, Texture2D> charToTexture = new ();
         static UI()
         {
             whitePixel = contentManager.Load<Texture2D>("white_pixel");
-            
-            var alphabet ="aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ" ;
-            foreach(var c in alphabet)
-            {
-                var assetName = char.IsLower(c) ? $"{c}" : char.ToLower(c) + "_";
-                charToTexture[c] = contentManager.Load<Texture2D>("characters/" + assetName);
-            }
+        }
+    }
 
-            var special = "!$%&(),.'-@[]^_`{}~+=";
-            foreach (var c in special)
-            {
-                charToTexture[c] = contentManager.Load<Texture2D>("characters/" + c);
-            }
+    public static class Icons
+    {
+        public static readonly Texture2D deadlySneeze;
+        public static Texture2D devour;
+        public static Texture2D fireball;
+        public static Texture2D sneak;
+        public static Texture2D hellFire;
+        public static Texture2D frostBeam;
 
-            var numbers = "0123456789";
-            foreach (var c in numbers)
-            {
-                charToTexture[c] = contentManager.Load<Texture2D>("characters/" + c);
-            }
-            
-            charToTexture['"'] = contentManager.Load<Texture2D>("characters/" + "bracket");
-            charToTexture['/'] = contentManager.Load<Texture2D>("characters/" + "slash");
-            charToTexture['\\'] = contentManager.Load<Texture2D>("characters/" + "backslash");
-            charToTexture[':'] = contentManager.Load<Texture2D>("characters/" + "colon");
-            charToTexture['>'] = contentManager.Load<Texture2D>("characters/" + "g_than");
-            charToTexture['<'] = contentManager.Load<Texture2D>("characters/" + "l_than");
-            charToTexture['?'] = contentManager.Load<Texture2D>("characters/" + "question_mark");
-            charToTexture['#'] = contentManager.Load<Texture2D>("characters/" + "sharp");
-            charToTexture['*'] = contentManager.Load<Texture2D>("characters/" + "star");
-            charToTexture[';'] = contentManager.Load<Texture2D>("characters/" + "semicolon");
+        static Icons()
+        {
+            deadlySneeze = Load("deadly_sneeze");
+            devour = Load("devour");
+            fireball = Load("fireball");
+            sneak = Load("sneak");
+            hellFire = Load("hell_fire");
+            frostBeam = Load("frost_beam");
+        }
+
+        private static Texture2D Load(string assetName)
+        {
+            var path = "icons/" + assetName;
+            return contentManager.Load<Texture2D>(path);
         }
     }
 }
