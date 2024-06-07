@@ -1,5 +1,6 @@
 using FontStashSharp;
 using Microsoft.Xna.Framework;
+using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
 using Myra.Graphics2D.UI;
 
@@ -12,12 +13,16 @@ public class Log : ListView
 
     public Log(Renderer renderer)
     {
+        Border = new SolidBrush(Color.Gray);
+        BorderThickness = new Thickness(1);
         _renderer = renderer;
         Width = 600;
         Height = 200;
         Background = new SolidBrush("#2a2829");
         //TODO: can't load fonts
         // _font = renderer.fontSystem.GetFont(30);
+
+        UIData.LogUpdated += OnLogUpdated;
     }
 
     public void OnLogUpdated(string newMessage)

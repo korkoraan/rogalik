@@ -1,9 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
-using rogalik.Common;
 using rogalik.Framework;
 using rogalik.Rendering.UIElements;
 using rogalik.Systems.AI;
@@ -59,6 +59,8 @@ public class Renderer
     private int _cellSize = 12;
     private List<List<(Point, Obj)>> _layers = new();
     private List<Point> _debugDots;
+    private Panel _rootPanel;
+    private IInputListener _controllingListener;
     public State state { get; set; }
 
     public Renderer(Game1 game, Point windowSize, SpriteBatch spriteBatch, FontSystem fontSystem)
@@ -68,8 +70,6 @@ public class Renderer
         this.fontSystem = fontSystem;
         _halfWindowSize = new XnaPoint(windowSize.x / 2, windowSize.y / 2);
         _debugDots = new List<Point>();
-
-        this.game.input.InputActionsPressed += OnInputActionsPressed;
 
         state = State.none;
     }
@@ -88,14 +88,7 @@ public class Renderer
         GetVisibleObjects();
         world.FinishedUpdate += OnFinishedUpdate;
         _mainCamera = new Camera(game, world.player);
-        UIData.LogUpdated += _log.OnLogUpdated;
     }
-
-    private void OnInputActionsPressed(List<InputAction> keys)
-    {
-        var old = state.ToString();
-        // UIData.AddLogMessage(old + " -> " + state);
-    } 
 
     /// <summary>
     /// Contains all elements that make up an inventory window
@@ -163,52 +156,47 @@ public class Renderer
         }
     }
     
-    private InventoryScreen _inventoryScreen;
-    private PickUpMenu _pickUpMenu;
-    private Log _log;
-    private AbilitiesBar _abilitiesBar;
-    private AbilitiesMenu _abilitiesMenu;
     public void InitUI(Desktop desktop)
     {
-        var rootPanel = new Panel();
+        _rootPanel = new Panel();
+        
+        var characterScreen = new CharacterScreen(this)
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center, ZIndex = 1
+        };
 
-        _log = new Log(this)
+        var abilitiesBar = new AbilitiesBar(this, characterScreen.abilitiesMenu)
+        {
+            VerticalAlignment = VerticalAlignment.Bottom,
+            HorizontalAlignment = HorizontalAlignment.Center,
+            Top = - 75
+        };
+        
+        var log = new Log(this)
         {
             VerticalAlignment = VerticalAlignment.Bottom,
             HorizontalAlignment = HorizontalAlignment.Left
         };
-
-        _inventoryScreen = new InventoryScreen(this)
+        var inventoryScreen = new InventoryScreen(this)
         {
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center
         };
-        _pickUpMenu = new PickUpMenu(this);
-        _abilitiesMenu = new AbilitiesMenu(this)
+        var statsBar = new StatsBar
         {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Center
-        };
-        _abilitiesBar = new AbilitiesBar(this, _abilitiesMenu)
-        {
-            HorizontalAlignment = HorizontalAlignment.Center,
-            VerticalAlignment = VerticalAlignment.Bottom,
-            Top = -100
+            VerticalAlignment = VerticalAlignment.Top,
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Top = 20,
+            Left = 60,
         };
 
-        //DON'T FORGET TO ADD IT HERE
-        rootPanel.Widgets.Add(_inventoryScreen);
-        rootPanel.Widgets.Add(_log);
-        rootPanel.Widgets.Add(_abilitiesBar);
-        rootPanel.Widgets.Add(_abilitiesMenu);
-        desktop.Root = rootPanel;
-    }
-    
-    public void ChooseItemToPick(IEnumerable<Obj> items)
-    {
-        if (state != State.none) return;
-        state = State.choosingItem;
+        _rootPanel.Widgets.Add(characterScreen);
+        _rootPanel.Widgets.Add(log);
+        _rootPanel.Widgets.Add(inventoryScreen);
+        _rootPanel.Widgets.Add(abilitiesBar);
+        _rootPanel.Widgets.Add(statsBar);
         
-        _pickUpMenu.Toggle(items);
+        desktop.Root = _rootPanel;
     }
 }

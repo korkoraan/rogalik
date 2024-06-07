@@ -4,33 +4,52 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D;
 using Myra.Graphics2D.Brushes;
-using Myra.Graphics2D.TextureAtlases;
 using Myra.Graphics2D.UI;
 using rogalik.Framework;
+using rogalik.Rendering.Parts;
 
 namespace rogalik.Rendering.UIElements;
 
 public sealed class AbilitiesMenu : Grid, IInputListener
 {
-    public List<AbilityData> abilityDatas;
-    private readonly ListView _abilitiesListView;
-    private VerticalStackPanel _selectedAbilityPanel;
-    private readonly VerticalStackPanel _noAbilitiesPanel;
-    private readonly Dictionary<int, VerticalStackPanel> _abilityPanels = new ();
+    public IEnumerable<Ability> abilities
+    {
+        get
+        {
+            foreach (var abilityPanel in _abilitiesListView.Widgets.Where(w => w is AbilityListItem))
+            {
+                yield return (abilityPanel as AbilityListItem)?.ability;
+            }
+        }
+    }
+    private readonly ListViewG _abilitiesListView;
+    private AbilityInfoPanel _selectedAbilityInfoPanel;
+    private readonly AbilityInfoPanel _noAbilitiesInfoListItem;
+    private readonly Dictionary<int, AbilityInfoPanel> _abilityPanels = new ();
     private Renderer _renderer;
-    public AbilitiesMenu(Renderer renderer)
+    private State _state = State.none;
+    
+    public delegate void AbilityReboundHandler(Ability ability, InputAction oldAction, InputAction newAction);
+    public event AbilityReboundHandler AbilityRebound;
+    
+    private enum State
+    {
+        none,
+        bindingAbilityKey,
+    }
+    public AbilitiesMenu(Renderer renderer, CharacterScreen characterScreen)
     {
         _renderer = renderer;
-        Width = 900;
-        Height = 600;
+        Width = characterScreen.contentPanel.Width;
+        Height = characterScreen.contentPanel.Height;
+        
         Background = new SolidBrush("#353634");
         BorderThickness = new Thickness(5);
         Border = new SolidBrush(Color.Gray);
-        Visible = false;
         ColumnsProportions.Add( new Proportion());
         ColumnsProportions.Add( new Proportion(ProportionType.Fill));
        
-        _abilitiesListView = new ListView
+        _abilitiesListView = new ListViewG
         {
             Background = new SolidBrush(Color.DarkRed), 
             Width = Width / 4,
@@ -39,133 +58,183 @@ public sealed class AbilitiesMenu : Grid, IInputListener
         _abilitiesListView.SelectedIndexChanged += (_, _) =>
         {
             var index = _abilitiesListView.SelectedIndex;
-            if(index == 0) return; // why does it allow to select the first separator? Looking at you, Myra >:|
-            SetSelectedAbilityPanel(index is not null ? _abilityPanels[(int)index] : _noAbilitiesPanel);
+            if(index == 0) return;
+            SetSelectedAbilityPanel(index is not null ? _abilityPanels[(int)index] : _noAbilitiesInfoListItem);
         };
         SetColumn(_abilitiesListView, 0);
         Widgets.Add(_abilitiesListView);
-        abilityDatas = GetAbilityDatas();
-        foreach (var data in abilityDatas)
+        foreach (var data in Global.GetPlayerAbilities())
         {
             AddAbility(data);
         }
 
-        _noAbilitiesPanel = new VerticalStackPanel
-        {
-            Widgets = 
-            { 
-                new Label
-                {
-                    Text = "You have no abilities",
-                    VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Center
-                }
-            }
-        };
+        _noAbilitiesInfoListItem = new AbilityInfoPanel(new Ability("You have to abilities", "", "", R.Icons.clownfish)); 
 
-        _selectedAbilityPanel = _abilityPanels.Count == 0
-            ? _selectedAbilityPanel = _noAbilitiesPanel
-            : _selectedAbilityPanel = _abilityPanels.First().Value;
+        _selectedAbilityInfoPanel = _abilityPanels.Count == 0
+            ? _selectedAbilityInfoPanel = _noAbilitiesInfoListItem
+            : _selectedAbilityInfoPanel = _abilityPanels.First().Value;
        
-        SetSelectedAbilityPanel(_selectedAbilityPanel);
-       
-        renderer.game.input.InputActionsPressed += OnInputActionsPressed;
+        SetSelectedAbilityPanel(_selectedAbilityInfoPanel);
     }
 
-    private void AddAbility(AbilityData data)
+    public sealed class AbilityListItem : Panel
+    {
+        public readonly Ability ability;
+        public Label controlBtnLabel;
+        
+        public AbilityListItem(Ability data)
+        {
+            this.ability = data;
+            Widgets.Add(new Label { Text = data.name, HorizontalAlignment = HorizontalAlignment.Center });
+            var controlBtnName = data.inputAction.ToString().Last().ToString();
+            controlBtnLabel = new Label 
+            {
+                Text = controlBtnName,
+                Background = new SolidBrush(Color.Black),
+                HorizontalAlignment = HorizontalAlignment.Right
+            };
+            Widgets.Add(controlBtnLabel);
+        }
+    }
+    
+    private void AddAbility(Ability ability)
     {
         _abilitiesListView.Widgets.Add(new VerticalSeparator { Height = 15, Color = Color.Transparent });
-        _abilitiesListView.Widgets.Add(new Label { Text = data.name, HorizontalAlignment = HorizontalAlignment.Center } );
+        var listItem = new AbilityListItem(ability);
+        _abilitiesListView.Widgets.Add(listItem);
         var index = _abilitiesListView.Widgets.Count - 1;
-        var panel = new VerticalStackPanel
-        {
-            Widgets =
-            {
-                new VerticalSeparator { Height = 50, Color = Color.Transparent },
-                new Image
-                {
-                    Renderable = new TextureRegion(data.texture),
-                    ResizeMode = ImageResizeMode.Stretch,
-                    HorizontalAlignment = HorizontalAlignment.Center
-                },
-                new VerticalSeparator { Height = 100, Color = Color.Transparent },
-                new Label {Text = data.name, HorizontalAlignment = HorizontalAlignment.Center, Scale = new Vector2(2)},
-                new VerticalSeparator { Height = 25, Color = Color.Transparent },
-                new Label{Text = "type: " + data.type, HorizontalAlignment = HorizontalAlignment.Center},
-                new VerticalSeparator { Height = 25, Color = Color.Transparent },
-                new Label{Text = data.description, HorizontalAlignment = HorizontalAlignment.Center}
-            }, 
-        };
+        var panel = new AbilityInfoPanel(ability);
         _abilityPanels[index] = panel;
+    }
+
+    private sealed class AbilityInfoPanel : Panel
+    {
+        public Ability ability;
+        public Label messageLabel;
+        private VerticalStackPanel _contentPanel;
+
+        public AbilityInfoPanel(Ability ability)
+        {
+            this.ability = ability;
+            _contentPanel = new VerticalStackPanel();
+            _contentPanel.Widgets.Add(new VerticalSeparator { Height = 100, Color = Color.Transparent });
+            _contentPanel.Widgets.Add(new Icon(100, 100, ability.texture)
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Center
+            });    
+            _contentPanel.Widgets.Add(new VerticalSeparator { Height = 100, Color = Color.Transparent });
+            _contentPanel.Widgets.Add(new Label {Text = ability.name, HorizontalAlignment = HorizontalAlignment.Center, Scale = new Vector2(2)});
+            _contentPanel.Widgets.Add(new VerticalSeparator { Height = 25, Color = Color.Transparent });
+            _contentPanel.Widgets.Add(new Label{Text = "type: " + ability.type, HorizontalAlignment = HorizontalAlignment.Center});
+            _contentPanel.Widgets.Add(new VerticalSeparator { Height = 25, Color = Color.Transparent });
+            _contentPanel.Widgets.Add(new Label{Text = ability.description, HorizontalAlignment = HorizontalAlignment.Center});
+            Widgets.Add(_contentPanel);
+            
+            messageLabel = new Label
+            {
+                HorizontalAlignment = HorizontalAlignment.Center,
+                VerticalAlignment = VerticalAlignment.Bottom,
+                Top = -10,
+                Text = "PRESS ENTER TO BIND AN ABILITY"
+            };
+            Widgets.Add(messageLabel);
+        }
     }
 
     /// <summary>
     /// Displays the selected ability panel
     /// </summary>
-    private void SetSelectedAbilityPanel(VerticalStackPanel selectedAbilityPanel)
+    private void SetSelectedAbilityPanel(AbilityInfoPanel selectedAbilityInfoPanel)
     {
-        Widgets.Remove(_selectedAbilityPanel);
-        _selectedAbilityPanel = selectedAbilityPanel;
-        SetColumn(_selectedAbilityPanel, 1);
-        Widgets.Add(_selectedAbilityPanel);
-    }
-
-    private List<AbilityData> GetAbilityDatas()
-    {
-        return new List<AbilityData>
-        {
-            new ("Deadly sneeze", "Sneeze with your mouth closed.", "active",R.Icons.deadlySneeze, InputAction.ability1, "1"),
-            new ("Fireball", "Throw a ball of fire at a point which explodes upon impact.", "target point", R.Icons.fireball, InputAction.ability2, "2"),
-            new ("Sneak", "Enter a stealth mode, making you harder to notice.","toggle", R.Icons.sneak, InputAction.ability3, "3"),
-            new ("Devour", "Eat a selected corpse.","target unit", R.Icons.devour, InputAction.ability4, "4"),
-            new ("Hell fire", "Summon an area of engulfing unholy flame.","target unit", R.Icons.hellFire, InputAction.ability5, "5"),
-            new ("Frost beam", "Cast a beam of energy that frosts everything in it's way.","target unit", R.Icons.frostBeam, InputAction.ability6, "6"),
-        };
+        Widgets.Remove(_selectedAbilityInfoPanel);
+        _selectedAbilityInfoPanel = selectedAbilityInfoPanel;
+        SetColumn(_selectedAbilityInfoPanel, 1);
+        Widgets.Add(_selectedAbilityInfoPanel);
     }
     
-
-    public void Toggle()
+    public void OnInputActionsPressed(List<InputAction> actions)
     {
-        Visible = !Visible;
-
-        if (_renderer.state == Renderer.State.abilitiesMenu)
+        if (_state == State.none) // switch?
         {
-            _renderer.state = Renderer.State.none;
-            ControlRelinquished?.Invoke();
+            if (actions.Contains(InputAction.UIselectDown) || actions.Contains(InputAction.UIselectUp))
+                _abilitiesListView.SetKeyboardFocus();
+            if (actions.Contains(InputAction.UIselect) && _abilitiesListView.SelectedItem != null)
+            {
+                _state = State.bindingAbilityKey;
+                _abilitiesListView.receivesInput = false;
+                _abilitiesListView.Enabled = false;
+                _selectedAbilityInfoPanel.messageLabel.Text = "CHOOSE A NUMBER BETWEEN 0-9";
+            }
             return;
         }
-       
-        _renderer.game.input.MakeSoloListener(this);
-        _renderer.state = Renderer.State.abilitiesMenu;
-        _abilitiesListView.SetKeyboardFocus();
-    } 
-
-    public void OnInputActionsPressed(List<InputAction> keys)
-    {
-        if (keys.Contains(InputAction.toggleAbilitiesMenu))
-            Toggle();
+        if (_state == State.bindingAbilityKey)
+        {
+            InputAction? newAction = null;
+            if (actions.Contains(InputAction.ability1))
+                newAction = InputAction.ability1;
+            if (actions.Contains(InputAction.ability2))
+                newAction = InputAction.ability2;
+            if (actions.Contains(InputAction.ability3))
+                newAction = InputAction.ability3;
+            if (actions.Contains(InputAction.ability4))
+                newAction = InputAction.ability4;
+            if (actions.Contains(InputAction.ability5))
+                newAction = InputAction.ability5;
+            if (actions.Contains(InputAction.ability6))
+                newAction = InputAction.ability6;
+            if (actions.Contains(InputAction.ability7))
+                newAction = InputAction.ability7;
+            if (actions.Contains(InputAction.ability8))
+                newAction = InputAction.ability8;
+            if (actions.Contains(InputAction.ability9))
+                newAction = InputAction.ability9;
+            if (actions.Contains(InputAction.ability10))
+                newAction = InputAction.ability10;
+            if (newAction != null && _abilitiesListView.SelectedItem is AbilityListItem abilityListItem)
+            {
+                var ability = _selectedAbilityInfoPanel.ability;
+                var oldAction = ability.inputAction; 
+                ability.inputAction = (InputAction)newAction;
+                AbilityRebound?.Invoke(ability, oldAction, (InputAction)newAction);
+                foreach (var w in _abilitiesListView.Widgets.Where(w => w is AbilityListItem item && item.ability.inputAction == newAction))
+                {
+                    (w as AbilityListItem).controlBtnLabel.Text = "";
+                }
+                abilityListItem.controlBtnLabel.Text = newAction.ToString().Last().ToString();
+            }
+            
+            _state = State.none;
+            _abilitiesListView.receivesInput = true;
+            _abilitiesListView.Enabled = true;
+            _selectedAbilityInfoPanel.messageLabel.Text = "";
+            return;
+        }
     }
 
-    public event IInputListener.ControlRelinquishedHandler ControlRelinquished;
+    public event IInputListener.ControlReleasedHandler ControlReleased;
 }
 
-public class AbilityData
+public class Ability
 {
     public string name;
     public string description;
     public string type;
     public Texture2D texture;
     public InputAction inputAction;
-    public string controlBtnName;
 
     //TODO: Add more constructors
-    public AbilityData(string name, string description, string type, Texture2D texture, InputAction inputAction, string controlBtnName)
+    public Ability(string name, string description, string type, Texture2D texture)
     {
         this.name = name;
         this.description = description;
         this.type = type;
         this.texture = texture;
+    }
+
+    public Ability(string name, string description, string type, Texture2D texture,
+        InputAction inputAction) : this(name, description, type, texture)
+    {
         this.inputAction = inputAction;
-        this.controlBtnName = controlBtnName;
     }
 }

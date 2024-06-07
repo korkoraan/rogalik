@@ -8,6 +8,113 @@ public static class R
 {
     public static ContentManager contentManager;
 
+    public static class Icons
+    {
+        public static readonly Texture2D map;
+        public static readonly Texture2D inventory;
+        public static readonly Texture2D abilities;
+        public static readonly Texture2D equipment;
+        public static readonly Texture2D stats;
+        public static readonly Texture2D damage;
+        public static readonly Texture2D armorPoints;
+        public static readonly Texture2D arrowUpGreen;
+        public static readonly Texture2D arrowDownRed;
+        public static readonly Texture2D clownfish;
+
+        static Icons()
+        {
+            inventory = Load("inventory");
+            equipment = Load("equipment");
+            abilities = Load("abilities");
+            stats = Load("stats");
+            map = Load("map");
+            damage = Load("damage");
+            armorPoints = Load("armor_points");
+            arrowUpGreen = Load("arrow_up_green");
+            arrowDownRed = Load("arrow_down_red");
+            clownfish = Load("clownfish");
+        }
+
+        public static class Abilities
+        {
+            public static readonly Texture2D deadlySneeze;
+            public static readonly Texture2D devour;
+            public static readonly Texture2D fireball;
+            public static readonly Texture2D sneak;
+            public static readonly Texture2D hellFire;
+            public static readonly Texture2D frostBeam;
+            public static readonly Texture2D shieldGuard;
+            public static readonly Texture2D mightyKick;
+            public static readonly Texture2D disarm;
+
+            static Abilities()
+            {
+                deadlySneeze = Load("deadly_sneeze");
+                devour = Load("devour");
+                fireball = Load("fireball");
+                sneak = Load("sneak");
+                hellFire = Load("hell_fire");
+                frostBeam = Load("frost_beam");
+                shieldGuard = Load("shield_guard");
+                mightyKick = Load("mighty_kick");
+                disarm = Load("disarm");
+            }
+            
+            private static Texture2D Load(string assetName)
+            {
+                var path = "icons/" + assetName;
+                return contentManager.Load<Texture2D>(path);
+            }
+        }
+
+        public static class Items
+        {
+            public static readonly Texture2D armorIron;
+            public static readonly Texture2D armorLeather;
+            public static readonly Texture2D armorPlate;
+            public static readonly Texture2D helmetIron;
+            public static readonly Texture2D helmetLeather;
+            public static readonly Texture2D helmetPlate;
+            public static readonly Texture2D glovesLeather;
+            public static readonly Texture2D glovesIron;
+            public static readonly Texture2D sword;
+            public static readonly Texture2D staff;
+
+            static Items()
+            {
+                armorIron = Load("armor_iron");
+                armorLeather = Load("armor_leather");
+                armorPlate = Load("armor_plate");
+                helmetLeather = Load("helmet_leather");
+                helmetIron = Load("helmet_iron");
+                helmetPlate = Load("helmet_plate");
+                glovesIron = Load("gloves_iron");
+                glovesLeather = Load("gloves_leather");
+                sword = Load("sword");
+                staff = Load("staff");
+            }
+        }
+
+        public static class Stats
+        {
+            public static readonly Texture2D will;
+            public static readonly Texture2D agility;
+            public static readonly Texture2D strength;
+            static Stats()
+            {
+                will = Load("will");
+                agility = Load("agility");
+                strength = Load("strength");
+            }
+        }
+
+        private static Texture2D Load(string assetName)
+        {
+            var path = "icons/" + assetName;
+            return contentManager.Load<Texture2D>(path);
+        }
+    }
+
     /// <summary>
     /// To add your tile texture declare a static field with a list of textures or a single texture.
     /// Then in a constructor specify tile name.
@@ -67,7 +174,7 @@ public static class R
             return textures;
         }
     }
-    
+
     public static class UI
     {
         public static Texture2D whitePixel;
@@ -77,28 +184,17 @@ public static class R
         }
     }
 
-    public static class Icons
+    public static class Images
     {
-        public static readonly Texture2D deadlySneeze;
-        public static Texture2D devour;
-        public static Texture2D fireball;
-        public static Texture2D sneak;
-        public static Texture2D hellFire;
-        public static Texture2D frostBeam;
+        public static readonly Texture2D humanBody;
 
-        static Icons()
+        static Images()
         {
-            deadlySneeze = Load("deadly_sneeze");
-            devour = Load("devour");
-            fireball = Load("fireball");
-            sneak = Load("sneak");
-            hellFire = Load("hell_fire");
-            frostBeam = Load("frost_beam");
+            humanBody = Load("human_body");
         }
-
         private static Texture2D Load(string assetName)
         {
-            var path = "icons/" + assetName;
+            var path = "pictures/" + assetName;
             return contentManager.Load<Texture2D>(path);
         }
     }
