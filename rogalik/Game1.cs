@@ -8,6 +8,7 @@ using rogalik.Framework;
 using rogalik.Rendering;
 using Myra;
 using Myra.Graphics2D.UI;
+using rogalik.Framework.Map;
 
 namespace rogalik;
 
@@ -43,7 +44,11 @@ public class Game1 : Game
     {
         // should always be the first line
         base.Initialize();
-        world = new World(this);
+        var map = Path.Exists(Consts.MAP_FILENAME)
+            ? Generator.CreateMapFromFile(Consts.MAP_FILENAME)
+            : Generator.CreateNewMap(1000, 1000);
+        world = new World(this, map);
+            
         renderer.Init();
         input.Init();
         

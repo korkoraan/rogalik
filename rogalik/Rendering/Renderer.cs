@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Myra.Graphics2D.UI;
 using rogalik.Framework;
+using rogalik.Framework.Map;
 using rogalik.Rendering.UIElements;
 using rogalik.Systems.AI;
 using rogalik.Systems.Common;
@@ -58,6 +59,7 @@ public class Renderer
     private Camera _mainCamera;
     private int _cellSize = 12;
     private List<List<(Point, Obj)>> _layers = new();
+    private MapPiece? _visibleMap;
     private List<Point> _debugDots;
     private Panel _rootPanel;
     private IInputListener _controllingListener;
@@ -90,12 +92,36 @@ public class Renderer
         _mainCamera = new Camera(game, world.player);
     }
 
+    public static Texture2D? GetTexture4Tile(Framework.Map.Tile.Data tileData)
+    {
+        return tileData.kind switch
+        {
+            Framework.Map.Tile.Kind.rockFloor => R.Tiles.surfaceRock[tileData.subKind],
+            Framework.Map.Tile.Kind.wallRock => R.Tiles.wallRock[tileData.subKind],
+            _ => null
+        };
+    }
+        
     /// <summary>
     /// Contains all elements that make up an inventory window
     /// </summary>
-
     public void DrawVisibleArea()
     {
+        if (_visibleMap != null)
+        {
+            var area = _visibleMap.Value.area;
+            var tiles = _visibleMap.Value.Tiles;
+            var stop = new MapPoint(area.EndX, area.EndY);
+            for (int x = area.X, i = 0; x <= stop.X; ++x, ++i)
+            {
+                for (int y = area.Y, j = 0; y <= stop.Y; ++y, ++j)
+                {
+                    var texture = GetTexture4Tile(tiles[i, j]);
+                    if (texture != null)
+                        DrawTexture(new Point(x, y), texture);
+                }
+            }
+        }
         foreach (var layer in _layers)
         {
             foreach (var (point, obj) in layer)
@@ -139,11 +165,12 @@ public class Renderer
     /// </summary>
     private void GetVisibleObjects()
     {
-        var visibleObjects = world.GetVisibleObjects();
         _layers.Clear();
         _layers.Add(new List<(Point, Obj)>());
         _layers.Add(new List<(Point, Obj)>());
         _layers.Add(new List<(Point, Obj)>());
+        _visibleMap = world.GetVisibleMap(world.player);
+        var visibleObjects = world.GetVisibleObjects(world.player);
         foreach (var (point, obj) in visibleObjects)
         {
             if (obj.HasComponent<Mind>() || obj == world.player)

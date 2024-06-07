@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using rogalik.Combat;
+using rogalik.Framework.Map;
 using rogalik.Rendering;
 using rogalik.Systems.AI;
 using rogalik.Systems.Items;
@@ -25,10 +27,12 @@ public sealed class World
     public Obj player;
     public bool initialized { get; private set; }
     public bool paused { get; private set; }
+    public readonly Map.MapBase map;
     
-    public World(Game1 game)
+    public World(Game1 game, Map.MapBase map)
     {
         _game = game;
+        this.map = map;
         player = new Obj();
         _systems.Add(new WorldGenSystem(this));
         _systems.Add(new PlayerActivityMonitorSystem(this));
@@ -71,12 +75,26 @@ public sealed class World
         }
         FinishedUpdate?.Invoke();
     }
-    
-    public IEnumerable<(Point, Obj)> GetVisibleObjects()
+
+    private const ushort VisibleRangeDefault = 10;
+    public IEnumerable<(Point, Obj)> GetVisibleObjects(Obj watcher, ushort radius = VisibleRangeDefault)
     {
-        var point = player.GetComponent<Position>()?.point;
-        return point == null ? default : InRange(player.GetComponent<Position>().point, 10);
+        var point = watcher.GetComponent<Position>()?.point;
+        return (point == null ? default : InRange((Point)point, radius))!; // TODO: solve this!
     }
+
+    public Map.MapPiece? GetVisibleMap(Obj watcher, ushort radius = VisibleRangeDefault)
+    {
+        var point = watcher.GetComponent<Position>()?.point;
+        if (point == null) 
+            return null;
+        var x1 = Math.Max(point.Value.x - VisibleRangeDefault, 0);
+        var y1 = Math.Max(point.Value.y - VisibleRangeDefault, 0);
+        var x2 = (uint)Math.Min(point.Value.x + VisibleRangeDefault, map.width);
+        var y2 = (uint)Math.Min(point.Value.y + VisibleRangeDefault, map.height);
+        return map.GetArea(new Area(x1, y1, (uint)(x2 - x1), (uint)(y2 - y1)));
+    }
+
 
     public IEnumerable<Obj> GetObjectsAt(Point point)
     {
