@@ -51,11 +51,11 @@ public class InventoryScreen : ListView, IInputListener
            if (_renderer.state == Renderer.State.inventory)
            {
                _renderer.state = Renderer.State.none;
-               ControlRelinquished?.Invoke();
+               ControlReleased?.Invoke(this);
                return;
            }
            
-           _renderer.game.input.MakeSoloListener(this);
+           _renderer.game.input.MakeSoloListeners(this);
            _renderer.state = Renderer.State.inventory;
            foreach (var item in _renderer.world.player.InventoryItems())
            {
@@ -64,12 +64,12 @@ public class InventoryScreen : ListView, IInputListener
            SetKeyboardFocus();
        } 
 
-    public void OnInputActionsPressed(List<InputAction> keys)
+    public void OnInputActionsPressed(List<InputAction> actions)
     {
-        if (keys.Contains(InputAction.toggleInventory))
+        if (actions.Contains(InputAction.toggleInventory))
             Toggle();
 
-        if (keys.Contains(InputAction.drop) && _items.Count > 0 && SelectedIndex != null)
+        if (actions.Contains(InputAction.drop) && _items.Count > 0 && SelectedIndex != null)
         {
             var index = (int)SelectedIndex;
             _renderer.world.player.Add(new IntentDrop(_items[index]));
@@ -77,5 +77,5 @@ public class InventoryScreen : ListView, IInputListener
         }
     }
 
-    public event IInputListener.ControlRelinquishedHandler ControlRelinquished;
+    public event IInputListener.ControlReleasedHandler ControlReleased;
 }

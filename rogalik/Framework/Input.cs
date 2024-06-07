@@ -7,11 +7,11 @@ namespace rogalik.Framework;
 
 public interface IInputListener
 {
-    public void OnInputActionsPressed(List<InputAction> keys);
+    public void OnInputActionsPressed(List<InputAction> actions);
     
-    public delegate void ControlRelinquishedHandler();
+    public delegate void ControlReleasedHandler(object sender);
     
-    public event ControlRelinquishedHandler ControlRelinquished;
+    public event ControlReleasedHandler ControlReleased;
 }
 
 public enum InputAction
@@ -33,7 +33,7 @@ public enum InputAction
     moveCameraDown,
     moveCameraLeft,
     moveCameraRight,
-    toggleAbilitiesMenu,
+    abilitiesMenu,
     exitWindow,
     ability1,
     ability2,
@@ -44,7 +44,13 @@ public enum InputAction
     ability7,
     ability8,
     ability9,
-    ability10
+    ability10,
+    equipmentMenu,
+    UIswitchToNextMenu,
+    UIselectDown,
+    UIselectUp,
+    UIselect,
+    statsMenu
 }
 
 /// <summary>
@@ -55,8 +61,11 @@ public class Input
 {
     private Game1 _game;
     private World _world;
-    public delegate void InputActionsPressedHandler(List<InputAction> key);
+    public delegate void InputActionsPressedHandler(List<InputAction> actions);
     public event InputActionsPressedHandler InputActionsPressed;
+
+    public delegate void KeysPressedHandler(List<Keys> keys);
+    public event KeysPressedHandler KeysPressed;
 
     public delegate void MouseClickHandler(MouseState mouseState);
     public event MouseClickHandler OnMouseClick;
@@ -66,16 +75,9 @@ public class Input
     private bool _isUnpressingKeys;
     private double _delay;
     private double _remainingDelay;
-    private Mode _mode;
     
-    private IInputListener _soloListener;
+    private List<IInputListener> _currentListeners = new();
     private InputActionsPressedHandler _listenersOnHold;
-
-    private enum Mode
-    {
-        ui,
-        game,
-    }
 
     public Input(Game1 game)
     {
@@ -153,7 +155,9 @@ public class Input
         [InputAction.moveCameraDown] = new []{ Keys.NumPad2 },
         [InputAction.moveCameraLeft] = new []{ Keys.NumPad4 },
         [InputAction.moveCameraRight] = new []{ Keys.NumPad6 },
-        [InputAction.toggleAbilitiesMenu] = new []{ Keys.A },
+        [InputAction.abilitiesMenu] = new []{ Keys.A },
+        [InputAction.equipmentMenu] = new [] { Keys.E },
+        [InputAction.statsMenu] = new [] { Keys.C },
         [InputAction.exitWindow] = new []{ Keys.Escape },
         [InputAction.ability1] = new []{ Keys.D1 },
         [InputAction.ability2] = new []{ Keys.D2 },
@@ -165,12 +169,17 @@ public class Input
         [InputAction.ability8] = new []{ Keys.D8 },
         [InputAction.ability9] = new []{ Keys.D9 },
         [InputAction.ability10] = new []{ Keys.D0 },
+        [InputAction.UIswitchToNextMenu] = new [] { Keys.Tab },
+        [InputAction.UIselectDown] = new [] { Keys.Down },
+        [InputAction.UIselectUp] = new [] { Keys.Up },
+        [InputAction.UIselect] = new [] { Keys.Enter },
     };
     
     private List<InputAction> _lastInputActions = new();
     
-    private void InvokeInputActions(ICollection<Keys> keysList)
+    private void InvokeInputActions(List<Keys> keysList)
     {
+        KeysPressed?.Invoke(keysList);
         _lastInputActions.Clear();
         foreach (var (action, keys) in keyBindings)
         {
@@ -184,19 +193,38 @@ public class Input
     /// Makes something the only one listening to input, until it fires RelinquishControl event.
     /// As soon as RelinquishControl is fired, listeners are returned. 
     /// </summary>
-    public void MakeSoloListener(IInputListener listener)
+    public void MakeSoloListeners(params IInputListener[] listeners)
     {
-        if(_soloListener != null) return;
+        if (_currentListeners.Count > 0)
+        {
+            foreach (var listener in _currentListeners)
+            {
+                listener.ControlReleased -= OnSoloControlReleased;
+            }
+        }
+        else
+            _listenersOnHold = InputActionsPressed;
         
-        _soloListener = listener;
-        listener.ControlRelinquished += OnSoloControlRelinquished;
-        _listenersOnHold = InputActionsPressed;
-        InputActionsPressed = listener.OnInputActionsPressed;
+        _currentListeners = listeners.ToList();
+        InputActionsPressed = null;
+        foreach (var listener in _currentListeners)
+        {
+            listener.ControlReleased += OnSoloControlReleased;
+            InputActionsPressed += listener.OnInputActionsPressed;
+        }
     }
 
-    private void OnSoloControlRelinquished()
+    public void ReleaseListeners()
     {
-        _soloListener = null;
+        _currentListeners.Clear();
         InputActionsPressed = _listenersOnHold;
+    }
+
+    private void OnSoloControlReleased(object sender)
+    {
+        if(sender is IInputListener listener)
+            _currentListeners.Remove(listener);
+        if(_currentListeners.Count == 0)
+            InputActionsPressed = _listenersOnHold;
     }
 }
