@@ -63,15 +63,15 @@ public class WorldGenSystem : GameSystem, IInitSystem
 
     public void Init()
     {
-        for (int x = 0; x < 100; x++)
-        {
-            for (int y = 0; y < 100; y++)
-            {
-                var surface = new Obj();
-                surface.AddComponent(new Appearance(R.Tiles.surfaceRock.Random(), "rock surface"));
-                Spawn(surface, (x,y));
-            }
-        }
+        // for (int x = 0; x < 100; x++)
+        // {
+        //     for (int y = 0; y < 100; y++)
+        //     {
+        //         var surface = new Obj();
+        //         surface.AddComponent(new Appearance(R.Tiles.surfaceRock.Random(), "rock surface"));
+        //         Spawn(surface, (x,y));
+        //     }
+        // }
 
         var goblin = CreateHumanoid();
         goblin.AddComponent(new Appearance(R.Tiles.goblinUnarmed, "goblin"));
