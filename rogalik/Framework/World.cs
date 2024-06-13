@@ -34,17 +34,26 @@ public sealed class World
         _game = game;
         this.map = map;
         player = new Obj();
-        _systems.Add(new WorldGenSystem(this));
-        _systems.Add(new PlayerActivityMonitorSystem(this));
-        _systems.Add(new SimpleMindSystem(this));
-        _systems.Add(new WalkingSystem(this));
-        _systems.Add(new VelocitySystem(this));
-        _systems.Add(new MeleeSystem(this));
-        _systems.Add(new PhysicalDmgSystem(this));
-        _systems.Add(new DestructionSystem(this));
-        _systems.Add(new PickingSystem(this));
-        _systems.Add(new DroppingSystem(this));
+        _systems = GameSystem.CreateSystems(new List<Type>()
+        {
+            typeof(WorldGenSystem),
+            typeof(PlayerActivityMonitorSystem),
+            typeof(SimpleMindSystem),
+            typeof(WalkingSystem),
+            typeof(VelocitySystem),
+            typeof(MeleeSystem),
+            typeof(PhysicalDmgSystem),
+            typeof(DestructionSystem),
+            typeof(DestructionSystem),
+            typeof(DroppingSystem),
+        }, this);
 
+        Console.WriteLine($"world.systems:");
+        foreach (var s in _systems)
+        {
+            Console.WriteLine($"    name:{s.GetType()}");
+        }
+        
         foreach (var gameSystem in _systems.FindAll(s => s is IInitSystem))
         {
             (gameSystem as IInitSystem)?.Init();
