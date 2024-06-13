@@ -3,7 +3,7 @@ using System.IO;
 
 namespace rogalik.Framework.Map;
 
-public class Generator
+public static class Generator
 {
     private static Tile.Data CreateTile(Random rnd)
     {
@@ -22,6 +22,23 @@ public class Generator
         return result;
     }
 
+    private static Tile.Data CreateTile(float n, Random rnd)
+    {
+        var result = new Tile.Data
+        {
+            kind = Tile.Kinds.GetFromNoise(n)
+        };
+        result.subKind = result.kind switch
+        {
+            Tile.Kind.rockFloor => (byte)rnd.Next(3), // see Rendering
+            Tile.Kind.wallRock => (byte)rnd.Next(1), // see Rendering
+            _ => throw new ArgumentOutOfRangeException()
+        };
+
+        result.attrs = (short)rnd.Next();
+        return result;
+    }
+    
     // normalize to current conditions 
     private static Tile.Data UpdateTile(Tile.Data tile) => tile;
     
@@ -29,14 +46,15 @@ public class Generator
     {
         MapBase result = new MapBaseSimple(width, height);
         var rnd = new Random();
+        var perlin = new Perlin2D(rnd);
         for (var x = 0; x < width; ++x)
         {
             for (var y = 0; y < height; ++y)
             {
-                result.SetTile(new MapPoint(x, y), CreateTile(rnd));
+                var p = perlin.Noise(x + rnd.NextSingle(), y + rnd.NextSingle(), 8) + 0.5f;
+                result.SetTile(new MapPoint(x, y), CreateTile(p, rnd));
             }
         }
-
         return result;
     }
 
