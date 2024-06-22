@@ -7,5 +7,10 @@ public abstract class Component
 {
     public Obj owner;
 
-    public abstract void Init();
+    /// <summary>
+    /// Use it to find other owner's components and finish setup.
+    /// </summary>
+    public virtual void Init()
+    {
+    }
 }

@@ -1,6 +1,10 @@
 using System.Collections.Generic;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using rogalik.Common;
+using rogalik.Framework;
+using rogalik.Systems.Walking;
+using Point = rogalik.Framework.Point;
 
 namespace rogalik.Rendering;
 
@@ -9,30 +13,32 @@ class Camera
     public Point pos;
     public float zoom = 3f;
 
-    public Camera(Point pos)
+    public Camera(Game1 game, Point pos)
     {
-        this.pos = pos;
-        Input.KeysPressed += OnKeysPressed;
+        this.pos = new Point(pos.x, pos.y);
+        game.input.InputActionsPressed += OnInputActionsPressed;
     }
 
-    public Camera()
+    public Camera(Game1 game, Obj obj)
     {
-        
+        pos = obj.GetComponent<Position>().point;
+        game.world.FinishedUpdate += () => pos = obj.GetComponent<Position>().point;;
+        game.input.InputActionsPressed += OnInputActionsPressed;
     }
     
-    private void OnKeysPressed(List<Keys> keys)
+    private void OnInputActionsPressed(List<InputAction> keys)
     {
-        if(keys.Contains(Keys.NumPad8))
-            pos.y -= 50;
-        if(keys.Contains(Keys.NumPad4))
-            pos.x -= 50;
-        if(keys.Contains(Keys.NumPad2))
-            pos.y += 50;
-        if(keys.Contains(Keys.NumPad6))
-            pos.x += 50;
-        if(keys.Contains(Keys.PageUp))
+        if(keys.Contains(InputAction.moveCameraUp))
+            pos.y -= 1;
+        if(keys.Contains(InputAction.moveCameraLeft))
+            pos.x -= 1;
+        if(keys.Contains(InputAction.moveCameraDown))
+            pos.y += 1;
+        if(keys.Contains(InputAction.moveCameraRight))
+            pos.x += 1;
+        if(keys.Contains(InputAction.zoomOut))
             zoom -= 0.1f;
-        if(keys.Contains(Keys.PageDown))
+        if(keys.Contains(InputAction.zoomIn))
             zoom += 0.1f;
     }
 }
