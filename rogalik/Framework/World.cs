@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using rogalik.Combat;
+using rogalik.Systems.Combat;
 using rogalik.Framework.Map;
 using rogalik.Rendering;
 using rogalik.Systems.AI;
+using rogalik.Systems.Common;
 using rogalik.Systems.Items;
 using rogalik.Systems.Walking;
 using rogalik.Systems.WorldGen;
@@ -43,7 +44,6 @@ public sealed class World
             typeof(VelocitySystem),
             typeof(MeleeSystem),
             typeof(PhysicalDmgSystem),
-            typeof(DestructionSystem),
             typeof(DestructionSystem),
             typeof(DroppingSystem),
         }, this);
@@ -146,7 +146,11 @@ public sealed class World
         var smthToHit = GetObjectsAt(playerPos.point + step).ToList().Find(o => o.HasComponent<Mind>());
         if (smthToHit != null)
         {
-            var weapon = new Obj();
+            var weapon = new Obj
+            {
+                new Volume(10),
+                new Density(3)
+            };
             player.AddComponent(new ActionHit(weapon, smthToHit));
             didSmth = true;
         }

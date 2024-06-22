@@ -1,6 +1,5 @@
 using rogalik.Framework;
-
-namespace rogalik.Combat;
+namespace rogalik.Systems.Combat;
 
 public class DestructionSystem : GameSystem
 {

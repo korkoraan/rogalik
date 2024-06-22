@@ -1,5 +1,4 @@
-using rogalik.Combat;
-using rogalik.Common;
+using rogalik.Systems.Combat;
 using rogalik.Framework;
 using rogalik.Rendering;
 using rogalik.Systems.Abilities;
@@ -76,12 +75,12 @@ public class WorldGenSystem : GameSystem, IInitSystem
         var goblin = CreateHumanoid();
         goblin.AddComponent(new Appearance(R.Tiles.goblinUnarmed, "goblin"));
         goblin.AddComponent(new Mind());
-        Spawn(goblin, (15, 10));
+        Spawn(goblin, (55, 55));
 
         world.player = CreateHumanoid();
         world.player.AddComponent(new Appearance(R.Tiles.playerWarrior, "human"));
-        Spawn(world.player, (10, 10));
-        // Spawn(Sword(), (11, 11));
+        Spawn(world.player, (50, 50));
+        Spawn(Sword(), (51, 51));
         // Spawn(Sword(), (11, 11));
     }
     
@@ -101,7 +100,6 @@ public class WorldGenSystem : GameSystem, IInitSystem
             new Gear(),
             new Inventory
             {
-                Sword(),
             },
             new PossessedAbilities
             {

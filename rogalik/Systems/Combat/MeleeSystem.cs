@@ -1,8 +1,9 @@
-using rogalik.Common;
+using System;
+using System.Collections.Generic;
 using rogalik.Framework;
 using rogalik.Systems.Common;
 
-namespace rogalik.Combat;
+namespace rogalik.Systems.Combat;
 
 public class ActionHit : IComponent
 {
@@ -21,6 +22,10 @@ public class ActionHit : IComponent
 /// </summary>
 public class MeleeSystem : GameSystem
 {
+    protected override List<Type> GetDependencies() => new List<Type>()
+    {
+        typeof(PhysicalDmgSystem)
+    };
     public MeleeSystem(World world) : base(world)
     {
     }

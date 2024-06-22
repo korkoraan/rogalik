@@ -1,7 +1,7 @@
 using rogalik.Framework;
 using rogalik.Rendering;
 
-namespace rogalik.Combat;
+namespace rogalik.Systems.Combat;
 
 public class Rigid : IComponent
 {

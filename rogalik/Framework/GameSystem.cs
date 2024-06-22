@@ -7,7 +7,7 @@ public abstract class GameSystem
 {
     protected World world;
 
-    protected virtual List<Type> LocalDependencies() => new List<Type>();
+    protected virtual List<Type> GetDependencies() => new List<Type>();
     
     private static void CreateSystems(List<GameSystem> result, List<Type> systemTypes, World world, 
         List<Type> existedTypes)
@@ -18,7 +18,7 @@ public abstract class GameSystem
             {
                 var t = (GameSystem)Activator.CreateInstance(T, world);
                 existedTypes.Add(T);
-                var tDependencies = t.LocalDependencies();
+                var tDependencies = t.GetDependencies();
                 CreateSystems(result, tDependencies, world, existedTypes);
                 result.Add(t);
             }
