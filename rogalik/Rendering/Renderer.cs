@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using FontStashSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -89,6 +88,7 @@ public class Renderer
         world = game.world;
         GetVisibleObjects();
         world.FinishedUpdate += OnFinishedUpdate;
+        world.PlayerDied += _deathScreen.OnPlayerDied;
         _mainCamera = new Camera(game, world.player);
     }
 
@@ -182,7 +182,8 @@ public class Renderer
 
         }
     }
-    
+
+    private DeathScreen _deathScreen;
     public void InitUI(Desktop desktop)
     {
         _rootPanel = new Panel();
@@ -217,12 +218,18 @@ public class Renderer
             Top = 20,
             Left = 60,
         };
+        _deathScreen = new DeathScreen()
+        {
+            HorizontalAlignment = HorizontalAlignment.Center,
+            VerticalAlignment = VerticalAlignment.Center
+        };
 
         _rootPanel.Widgets.Add(characterScreen);
         _rootPanel.Widgets.Add(log);
         _rootPanel.Widgets.Add(inventoryScreen);
         _rootPanel.Widgets.Add(abilitiesBar);
         _rootPanel.Widgets.Add(statsBar);
+        _rootPanel.Widgets.Add(_deathScreen);
         
         desktop.Root = _rootPanel;
     }

@@ -1184,18 +1184,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/abilities.png
 
-#begin icons/abilities.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/abilities.png
-
 #begin icons/agility.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1207,30 +1195,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/agility.png
-
-#begin icons/agility.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/agility.png
-
-#begin icons/armor_iron.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/armor_iron.png
 
 #begin icons/armor_iron.png
 /importer:TextureImporter
@@ -1256,18 +1220,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/armor_leather.png
 
-#begin icons/armor_leather.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/armor_leather.png
-
 #begin icons/armor_plate.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1279,30 +1231,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/armor_plate.png
-
-#begin icons/armor_plate.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/armor_plate.png
-
-#begin icons/armor_points.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/armor_points.png
 
 #begin icons/armor_points.png
 /importer:TextureImporter
@@ -1328,18 +1256,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/arrow_down_red.png
 
-#begin icons/arrow_down_red.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/arrow_down_red.png
-
 #begin icons/arrow_up_green.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1351,30 +1267,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/arrow_up_green.png
-
-#begin icons/arrow_up_green.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/arrow_up_green.png
-
-#begin icons/axe.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/axe.png
 
 #begin icons/axe.png
 /importer:TextureImporter
@@ -1400,18 +1292,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/battle_axe.png
 
-#begin icons/battle_axe.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/battle_axe.png
-
 #begin icons/belt.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1423,30 +1303,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/belt.png
-
-#begin icons/belt.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/belt.png
-
-#begin icons/boots_iron.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/boots_iron.png
 
 #begin icons/boots_iron.png
 /importer:TextureImporter
@@ -1472,18 +1328,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/boots_leather.png
 
-#begin icons/boots_leather.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/boots_leather.png
-
 #begin icons/bow_and_arrow.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1495,30 +1339,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/bow_and_arrow.png
-
-#begin icons/bow_and_arrow.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/bow_and_arrow.png
-
-#begin icons/cloak.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/cloak.png
 
 #begin icons/cloak.png
 /importer:TextureImporter
@@ -1544,18 +1364,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/clownfish.png
 
-#begin icons/clownfish.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/clownfish.png
-
 #begin icons/club.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1567,30 +1375,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/club.png
-
-#begin icons/club.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/club.png
-
-#begin icons/crossbow.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/crossbow.png
 
 #begin icons/crossbow.png
 /importer:TextureImporter
@@ -1616,18 +1400,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/dagge.png
 
-#begin icons/dagge.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/dagge.png
-
 #begin icons/damage.webp
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1639,30 +1411,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/damage.webp
-
-#begin icons/damage.webp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/damage.webp
-
-#begin icons/deadly_sneeze.webp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/deadly_sneeze.webp
 
 #begin icons/deadly_sneeze.webp
 /importer:TextureImporter
@@ -1688,18 +1436,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/devour.webp
 
-#begin icons/devour.webp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/devour.webp
-
 #begin icons/disarm.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1711,30 +1447,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/disarm.png
-
-#begin icons/disarm.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/disarm.png
-
-#begin icons/equipment.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/equipment.png
 
 #begin icons/equipment.png
 /importer:TextureImporter
@@ -1760,18 +1472,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/fireball.webp
 
-#begin icons/fireball.webp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/fireball.webp
-
 #begin icons/frost_beam.webp
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1783,30 +1483,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/frost_beam.webp
-
-#begin icons/frost_beam.webp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/frost_beam.webp
-
-#begin icons/gloves_iron.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/gloves_iron.png
 
 #begin icons/gloves_iron.png
 /importer:TextureImporter
@@ -1832,18 +1508,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/gloves_leather.png
 
-#begin icons/gloves_leather.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/gloves_leather.png
-
 #begin icons/hell_fire.webp
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1855,30 +1519,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/hell_fire.webp
-
-#begin icons/hell_fire.webp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/hell_fire.webp
-
-#begin icons/helmet_iron.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/helmet_iron.png
 
 #begin icons/helmet_iron.png
 /importer:TextureImporter
@@ -1904,18 +1544,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/helmet_leather.png
 
-#begin icons/helmet_leather.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/helmet_leather.png
-
 #begin icons/helmet_plate.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1927,30 +1555,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/helmet_plate.png
-
-#begin icons/helmet_plate.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/helmet_plate.png
-
-#begin icons/inventory.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/inventory.png
 
 #begin icons/inventory.png
 /importer:TextureImporter
@@ -1976,18 +1580,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/map.png
 
-#begin icons/map.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/map.png
-
 #begin icons/mighty_kick.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -1999,30 +1591,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/mighty_kick.png
-
-#begin icons/mighty_kick.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/mighty_kick.png
-
-#begin icons/morning_star.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/morning_star.png
 
 #begin icons/morning_star.png
 /importer:TextureImporter
@@ -2048,18 +1616,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/pants.png
 
-#begin icons/pants.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/pants.png
-
 #begin icons/shield_guard.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2071,30 +1627,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/shield_guard.png
-
-#begin icons/shield_guard.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/shield_guard.png
-
-#begin icons/shield_iron.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/shield_iron.png
 
 #begin icons/shield_iron.png
 /importer:TextureImporter
@@ -2120,30 +1652,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/shield_round.png
 
-#begin icons/shield_round.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/shield_round.png
-
-#begin icons/shield_wooden.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/shield_wooden.png
-
 #begin icons/shield_wooden.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2168,18 +1676,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/shirt.png
 
-#begin icons/shirt.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/shirt.png
-
 #begin icons/sneak.webp
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2191,30 +1687,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:icons/sneak.webp
-
-#begin icons/sneak.webp
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/sneak.webp
-
-#begin icons/staff.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/staff.png
 
 #begin icons/staff.png
 /importer:TextureImporter
@@ -2252,30 +1724,6 @@
 /processorParam:TextureFormat=Color
 /build:icons/strength.png
 
-#begin icons/strength.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/strength.png
-
-#begin icons/sword.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:icons/sword.png
-
 #begin icons/sword.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -2300,7 +1748,7 @@
 /processorParam:TextureFormat=Color
 /build:icons/will.png
 
-#begin icons/will.png
+#begin pictures/death_screen.jpg
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -2310,7 +1758,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:icons/will.png
+/build:pictures/death_screen.jpg
+
+#begin pictures/human_body.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pictures/human_body.png
 
 #begin pictures/human_body.png
 /importer:TextureImporter

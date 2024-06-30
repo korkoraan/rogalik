@@ -3,21 +3,21 @@ using rogalik.Rendering;
 
 namespace rogalik.Systems.Combat;
 
-public class Rigid : IComponent
+public class Health : IComponent
 {
-    public int maxIntegrityPts; 
-    public int integrityPts;
+    public int maxHealthPts; 
+    public int healthPts;
 
-    public Rigid(int maxIntegrityPts)
+    public Health(int maxHealthPts)
     {
-        this.maxIntegrityPts = maxIntegrityPts;
-        integrityPts = maxIntegrityPts;
+        this.maxHealthPts = maxHealthPts;
+        healthPts = maxHealthPts;
     }
 
-    public Rigid(int maxIntegrityPts, int initialIntegrityPts)
+    public Health(int maxHealthPts, int initialHealthPts)
     {
-        this.maxIntegrityPts = maxIntegrityPts;
-        integrityPts = initialIntegrityPts;
+        this.maxHealthPts = maxHealthPts;
+        healthPts = initialHealthPts;
     }
 }
 
@@ -43,15 +43,17 @@ public class PhysicalDmgSystem : GameSystem
 
     public override void Update(uint ticks)
     {
-        var filter = new Filter().With<DmgPhysical>().With<Rigid>().Apply(world.objects);
+        var filter = new Filter().With<DmgPhysical>().With<Health>().Apply(world.objects);
 
         foreach (var obj in filter)
         {
-            var rigid = obj.GetComponent<Rigid>();
-            UIData.AddLogMessage($"{obj} gets hit for {obj.GetComponent<DmgPhysical>().dmgPts}");
-            rigid.integrityPts -= (int)obj.GetComponent<DmgPhysical>().dmgPts;
-            UIData.AddLogMessage($"{obj} now has {rigid.integrityPts} integrity");
-            if (rigid.integrityPts <= 0)
+            var rigid = obj.GetComponent<Health>();
+            var dmg = obj.GetComponent<DmgPhysical>();
+            UIData.AddLogMessage($"{obj} gets hit for {obj.GetComponent<DmgPhysical>().dmgPts} damage points");
+            rigid.healthPts -= (int)dmg.dmgPts;
+            UIData.AddLogMessage($"{obj} now has {rigid.healthPts} health");
+            obj.RemoveComponent(dmg);
+            if (rigid.healthPts <= 0)
             {
                 obj.AddComponent(new Destroyed());
                 UIData.AddLogMessage($"{obj} is destroyed");

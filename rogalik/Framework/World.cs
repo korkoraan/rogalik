@@ -22,6 +22,10 @@ public sealed class World
 
     public event WorldUpdatedHandler StartedUpdate;
     public event WorldUpdatedHandler FinishedUpdate;
+
+    public delegate void PlayerDiedHandler();
+
+    public event PlayerDiedHandler PlayerDied;
     
     public List<Obj> objects = new ();
     private List<GameSystem> _systems = new ();
@@ -34,9 +38,7 @@ public sealed class World
     {
         _game = game;
         this.map = map;
-        player = new Obj();
-        _systems = GameSystem.CreateSystems(new List<Type>()
-        {
+        _systems = GameSystem.CreateSystems([
             typeof(WorldGenSystem),
             typeof(PlayerActivityMonitorSystem),
             typeof(SimpleMindSystem),
@@ -45,8 +47,9 @@ public sealed class World
             typeof(MeleeSystem),
             typeof(PhysicalDmgSystem),
             typeof(DestructionSystem),
-            typeof(DroppingSystem),
-        }, this);
+            typeof(DroppingSystem)
+        ], this);
+        player = new Obj();
 
         Console.WriteLine($"world.systems:");
         foreach (var s in _systems)
@@ -83,6 +86,8 @@ public sealed class World
             system.Update(timeToUpdate);
         }
         FinishedUpdate?.Invoke();
+        if (player.HasComponent<Destroyed>())
+            PlayerDied?.Invoke();
     }
 
     private const ushort VisibleRangeDefault = 10;
@@ -103,8 +108,7 @@ public sealed class World
         var y2 = (uint)Math.Min(point.Value.y + VisibleRangeDefault, map.height);
         return map.GetArea(new Area(x1, y1, (uint)(x2 - x1), (uint)(y2 - y1)));
     }
-
-
+    
     public IEnumerable<Obj> GetObjectsAt(Point point)
     {
         return objects.Where(obj => obj.GetComponent<Position>()?.point == point);
@@ -149,7 +153,7 @@ public sealed class World
             var weapon = new Obj
             {
                 new Volume(10),
-                new Density(3)
+                new Density(5)
             };
             player.AddComponent(new ActionHit(weapon, smthToHit));
             didSmth = true;

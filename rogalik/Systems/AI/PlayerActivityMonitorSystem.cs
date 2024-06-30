@@ -1,6 +1,4 @@
-using rogalik.Common;
 using rogalik.Framework;
-
 namespace rogalik.Systems.AI;
 
 public class PlayerActivityMonitorSystem : GameSystem

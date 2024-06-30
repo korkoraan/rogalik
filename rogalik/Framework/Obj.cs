@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using rogalik.Common;
 using rogalik.Systems.Common;
 
 namespace rogalik.Framework;
 
 public class Obj : IEnumerable
 {
-    public List<IComponent> components = new();
+    private List<IComponent> components = new();
     public Obj()
     {
     }
@@ -15,7 +14,7 @@ public class Obj : IEnumerable
     {
         foreach (var component in components)
         {
-            this.components.Add(component);
+            AddComponent(component);
         }
     }
     public TComponent GetComponent<TComponent>() where TComponent : IComponent

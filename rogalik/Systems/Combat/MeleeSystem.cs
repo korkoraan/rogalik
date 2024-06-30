@@ -42,8 +42,9 @@ public class MeleeSystem : GameSystem
             var mass = volume * density;
             uint speed = 1;
             var dmgPts = mass * speed;
-
+            
             hit.target.AddComponent(new DmgPhysical(dmgPts));
+            obj.RemoveComponent(hit);
         }
     }
 }

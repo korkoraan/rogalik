@@ -186,11 +186,11 @@ public static class R
 
     public static class Images
     {
-        public static readonly Texture2D humanBody;
+        public static readonly Texture2D deathScreen;
 
         static Images()
         {
-            humanBody = Load("human_body");
+            deathScreen = Load("death_screen");
         }
         private static Texture2D Load(string assetName)
         {
