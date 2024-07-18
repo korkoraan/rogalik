@@ -16,31 +16,22 @@ namespace rogalik.Rendering;
 //TODO: not a thread safe solution. singleton also might be a bad idea. rather do an observer of player surroundings.
 public static class UIData
 {
-    private static readonly List<string> _log = new();
+    private static readonly List<string> _messages = new();
     public delegate void LogUpdatedHandler(string newMessage);
 
     public static event LogUpdatedHandler LogUpdated;
 
     public static void AddLogMessage(string message)
     {
-        _log.Add(message);
+        _messages.Add(message);
         LogUpdated?.Invoke(message);
     }
 
     public static void AddLogMessage(object message)
     {
         var msg = message.ToString();
-        _log.Add(msg);
+        _messages.Add(msg);
         LogUpdated?.Invoke(msg);
-    }
-
-    public static IEnumerable<string> GetLastMessages(int amount)
-    {
-        for (int i = 0; i < amount; i++)
-        {
-            if(i > _log.Count - 1) yield break;
-            yield return _log[^i];
-        }
     }
 }
 
@@ -204,7 +195,8 @@ public class Renderer
         var log = new Log(this)
         {
             VerticalAlignment = VerticalAlignment.Bottom,
-            HorizontalAlignment = HorizontalAlignment.Left
+            HorizontalAlignment = HorizontalAlignment.Left,
+            Top = -50
         };
         var inventoryScreen = new InventoryScreen(this)
         {

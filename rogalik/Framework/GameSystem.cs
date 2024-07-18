@@ -3,6 +3,25 @@ using System.Collections.Generic;
 
 namespace rogalik.Framework;
 
+public interface IInitSystem
+{
+    public void Init();
+}
+
+public interface IEarlyUpdateSystem
+{
+    public void EarlyUpdate(uint ticks);
+}
+
+public interface IUpdateSystem
+{
+    public void Update(uint ticks);
+}
+public interface ILateUpdateSystem
+{
+    public void LateUpdate(uint ticks);
+}
+
 public abstract class GameSystem
 {
     protected World world;
@@ -16,7 +35,7 @@ public abstract class GameSystem
         {
             if (!existedTypes.Contains(T))
             {
-                var t = (GameSystem)Activator.CreateInstance(T, world);
+                var t = (GameSystem)Activator.CreateInstance(T, world)!;
                 existedTypes.Add(T);
                 var tDependencies = t.GetDependencies();
                 CreateSystems(result, tDependencies, world, existedTypes);
@@ -38,6 +57,4 @@ public abstract class GameSystem
     {
         this.world = world;
     }
-
-    public abstract void Update(uint ticks);
 }

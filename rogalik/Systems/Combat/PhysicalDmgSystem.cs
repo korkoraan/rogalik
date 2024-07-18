@@ -35,13 +35,13 @@ public class DmgPhysical : IComponent
     }
 }
 
-public class PhysicalDmgSystem : GameSystem
+public class PhysicalDmgSystem : GameSystem, IUpdateSystem
 {
     public PhysicalDmgSystem(World world) : base(world)
     {
     }
 
-    public override void Update(uint ticks)
+    public void Update(uint ticks)
     {
         var filter = new Filter().With<DmgPhysical>().With<Health>().Apply(world.objects);
 
@@ -49,14 +49,14 @@ public class PhysicalDmgSystem : GameSystem
         {
             var rigid = obj.GetComponent<Health>();
             var dmg = obj.GetComponent<DmgPhysical>();
-            UIData.AddLogMessage($"{obj} gets hit for {obj.GetComponent<DmgPhysical>().dmgPts} damage points");
+            // UIData.AddLogMessage($"{obj.Description()} gets hit for {obj.GetComponent<DmgPhysical>().dmgPts} damage points");
             rigid.healthPts -= (int)dmg.dmgPts;
-            UIData.AddLogMessage($"{obj} now has {rigid.healthPts} health");
+            // UIData.AddLogMessage($"{obj.Description()} now has {rigid.healthPts} health");
             obj.RemoveComponent(dmg);
             if (rigid.healthPts <= 0)
             {
                 obj.AddComponent(new Destroyed());
-                UIData.AddLogMessage($"{obj} is destroyed");
+                UIData.AddLogMessage($"{obj.Description()} is destroyed");
             }
         }
     }

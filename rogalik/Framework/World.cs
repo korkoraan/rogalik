@@ -4,10 +4,9 @@ using System.Linq;
 using System.Numerics;
 using rogalik.Systems.Combat;
 using rogalik.Framework.Map;
-using rogalik.Rendering;
 using rogalik.Systems.AI;
-using rogalik.Systems.Common;
 using rogalik.Systems.Items;
+using rogalik.Systems.Time;
 using rogalik.Systems.Walking;
 using rogalik.Systems.WorldGen;
 
@@ -21,7 +20,7 @@ public sealed class World
     public delegate void WorldUpdatedHandler();
 
     public event WorldUpdatedHandler StartedUpdate;
-    public event WorldUpdatedHandler FinishedUpdate;
+    public event WorldUpdatedHandler? FinishedUpdate;
 
     public delegate void PlayerDiedHandler();
 
@@ -29,10 +28,14 @@ public sealed class World
     
     public List<Obj> objects = new ();
     private List<GameSystem> _systems = new ();
+    private IEnumerable<IEarlyUpdateSystem> _earlyUpdateSystems;
+    private IEnumerable<IUpdateSystem> _updateSystems;
+    private IEnumerable<ILateUpdateSystem> _lateUpdateSystems;
     public Obj player;
     public bool initialized { get; private set; }
     public bool paused { get; private set; }
     public readonly Map.MapBase map;
+    public int lastUpdateCycleCount = 0;
     
     public World(Game1 game, Map.MapBase map)
     {
@@ -47,7 +50,8 @@ public sealed class World
             typeof(MeleeSystem),
             typeof(PhysicalDmgSystem),
             typeof(DestructionSystem),
-            typeof(DroppingSystem)
+            typeof(DroppingSystem),
+            typeof(ActionSystem),
         ], this);
         player = new Obj();
 
@@ -56,7 +60,10 @@ public sealed class World
         {
             Console.WriteLine($"    name:{s.GetType()}");
         }
-        
+
+        _earlyUpdateSystems = _systems.OfType<IEarlyUpdateSystem>();
+        _updateSystems = _systems.OfType<IUpdateSystem>();
+        _lateUpdateSystems = _systems.OfType<ILateUpdateSystem>();
         foreach (var gameSystem in _systems.FindAll(s => s is IInitSystem))
         {
             (gameSystem as IInitSystem)?.Init();
@@ -76,18 +83,35 @@ public sealed class World
                 yield return (pos.point, obj);
         }
     }
-    
-    private void Update(uint timeToUpdate)
+
+    private void Update()
     {
-        if(paused) return;
-        _time += timeToUpdate;
-        foreach (var system in _systems)
+        foreach (var system in _earlyUpdateSystems)
         {
-            system.Update(timeToUpdate);
+            system.EarlyUpdate(1);
         }
-        FinishedUpdate?.Invoke();
+
+        foreach (var system in _updateSystems)
+        {
+            system.Update(1);
+        }
+
+        foreach (var system in _lateUpdateSystems)
+        {
+            system.LateUpdate(1);
+        }
+
         if (player.HasComponent<Destroyed>())
             PlayerDied?.Invoke();
+            
+        _time++;
+    }
+    private void Update(uint timeToUpdate)
+    {
+        for (var i = 0; i < timeToUpdate; ++i)
+        {
+            Update();
+        }
     }
 
     private const ushort VisibleRangeDefault = 10;
@@ -111,7 +135,42 @@ public sealed class World
     
     public IEnumerable<Obj> GetObjectsAt(Point point)
     {
-        return objects.Where(obj => obj.GetComponent<Position>()?.point == point);
+        // return objects.Where(obj => obj.GetComponent<Position>()?.point == point);
+        foreach (var o in objects.Where(obj => obj.GetComponent<Position>()?.point == point))
+        {
+            yield return o;
+        }
+
+        objects.Where(obj => obj.GetComponent<Position>()?.point == point);
+    }
+
+    public IEnumerable<(Point, IEnumerable<Obj>)> GetPointToObjInRadius(Point point, uint radius)
+    {
+        List<(Point, IEnumerable<Obj>)> result = [];
+        for (var x = point.x - (int)radius; x <= point.x + radius; x++)
+        {
+            for (var y = point.y - (int)radius; y <= point.y + radius; y--)
+            {
+                result.Add((point, GetObjectsAt(new Point(x, y))));
+            }
+        }
+
+        return result;
+    }
+    
+    public IEnumerable<Obj> GetObjectsInRadius(Point point, uint radius)
+    {
+        List<Obj> result = [];
+        for (var x = point.x - (int)radius; x <= point.x + radius; x++)
+        {
+            for (var y = point.y - (int)radius; y <= point.y + radius; y++)
+            {
+                foreach (var o in GetObjectsAt(new Point(x, y)))
+                {
+                    yield return o;
+                }
+            }
+        }
     }
 
     public void Pause()
@@ -126,7 +185,6 @@ public sealed class World
 
     private void OnActionPressed(List<InputAction> inputActions)
     {
-        var didSmth = false;
         var playerPos = player.GetComponent<Position>();
         if(playerPos == null) return;
         
@@ -152,46 +210,33 @@ public sealed class World
         {
             var weapon = new Obj
             {
-                new Volume(10),
-                new Density(5)
+                new Weapon(10, 5)
             };
-            player.AddComponent(new ActionHit(weapon, smthToHit));
-            didSmth = true;
+            player.Attempt(new ActionHit(weapon, smthToHit));
         }
         else if( step != default )
         {
-            player.AddComponent(new ActionWalk(step));
-            didSmth = true;
+            player.Attempt(new ActionWalk(step));
         }
-        // else if (step != (0, 0))
-        // {
-        //     player.AddComponent(new ActionWalk(step));
-        //     didSmth = true;
-        // }
-        // else if (keys.Contains(Keys.P))
-        // {
-        //     var items = _world.GetObjectsAt(playerPos.point).ToList();
-        //     items.Remove(player);
-        //     items.RemoveAll(o => o.GetComponent<Appearance>()?.description == "rock surface");
-        //     switch (items.Count)
-        //     {
-        //         case 1:
-        //             player.AddComponent(new ActionPick(items.First()));
-        //             UIData.AddLogMessage($"you pick up a {items.First()}");
-        //             break;
-        //         case > 1:
-        //             _game.renderer.ChooseItemToPick(items);
-        //             break;
-        //         default:
-        //             UIData.AddLogMessage("nothing to pick up");
-        //             break;
-        //     }
-        // }
-        // else if (keys.Contains(Keys.D))
-        // {
-        // }
-        //
-        if(didSmth)
+        else if(inputActions.Contains(InputAction.wait))
+        {
+            player.Attempt(new ActionWait());
+        }
+        
+        if(!player.HasComponent<Attempting>()) return; 
+        while (true)
+        {
             Update(1);
+            if (!player.IsDoingSomething() || player.HasComponent<Destroyed>())
+            {
+                FinishedUpdate?.Invoke();
+                break;
+            }
+            
+            lastUpdateCycleCount++;
+            if (lastUpdateCycleCount > 100000)
+                throw new Exception("Update cycle exceeded 100k iterations");
+        }
+        C.Print($"time: {time}, AP: {player.GetComponent<ActionPoints>().value}");
     }
 }

@@ -33,9 +33,9 @@ public class Velocity : IComponent
     }
 }
 
-public class VelocitySystem : GameSystem
+public class VelocitySystem : GameSystem, IUpdateSystem
 {
-    public override void Update(uint ticks)
+    public void Update(uint ticks)
     {
         var filter = new Filter().With<Position>().With<Velocity>().Apply(world.objects);
 

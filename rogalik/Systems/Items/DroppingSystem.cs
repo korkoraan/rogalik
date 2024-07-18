@@ -29,13 +29,13 @@ public class ActionDrop : IComponent
     }
 }
 
-public class DroppingSystem : GameSystem
+public class DroppingSystem : GameSystem, IUpdateSystem
 {
     public DroppingSystem(World world) : base(world)
     {
     }
 
-    public override void Update(uint ticks)
+    public void Update(uint ticks)
     {
         var intentFilter = new Filter().With<Position>().With<IntentDrop>().With(o => o.HasComponent<Inventory>()).Apply(world.objects);
         foreach (var obj in intentFilter)

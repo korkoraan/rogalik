@@ -55,6 +55,16 @@ public static class Rnd
     {
         return NewInt(0, list.Count);
     }
+
+    /// <summary>
+    /// Roll a number of dice.
+    /// </summary>
+    /// <param name="d">number of sides a die have</param>
+    /// <returns>total points rolled on all dices</returns>
+    public static uint D(uint d)
+    {
+        return (uint)NewInt(1, (int)(d + 1));;
+    }
 }
 
 public static class Geometry

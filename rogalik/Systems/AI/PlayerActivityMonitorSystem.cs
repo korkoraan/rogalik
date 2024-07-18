@@ -1,19 +1,17 @@
 using rogalik.Framework;
 namespace rogalik.Systems.AI;
 
-public class PlayerActivityMonitorSystem : GameSystem
+public class PlayerActivityMonitorSystem : GameSystem, IUpdateSystem
 {
     public bool playerDoingSmth;
-    public override void Update(uint ticks)
+    public void Update(uint ticks)
     {
         var filter = new Filter().With<PlayerMind>().Apply(world.objects);
         var playerCount = 0; 
-        foreach (var player in filter)
+        foreach (var _ in filter)
         {
             playerCount++;
             if(playerCount > 1) C.Print("WARNING: more than 1 PlayerMind detected!");
-
-            playerDoingSmth = player.GetAllComponents<IAction>().Count > 0;
         }
     }
 

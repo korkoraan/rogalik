@@ -31,13 +31,13 @@ public class PossessedAbilities : IComponent, IEnumerable
     }
 }
 
-public class AbilitySystem : GameSystem
+public class AbilitySystem : GameSystem, IUpdateSystem
 {
     public AbilitySystem(World world) : base(world)
     {
     }
 
-    public override void Update(uint ticks)
+    public void Update(uint ticks)
     {
         throw new System.NotImplementedException();
     }

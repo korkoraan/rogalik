@@ -10,21 +10,6 @@ public class Gear : IComponent
     public List<Obj> items = new ();
 }
 
-// public class Container : IComponent, IEnumerable
-// {
-//     public List<Obj> items = new ();
-//
-//     public void Add(Obj obj)
-//     {
-//         items.Add(obj);
-//     }
-//
-//     public IEnumerator GetEnumerator()
-//     {
-//         return items.GetEnumerator();
-//     }
-// }
-
 public class Inventory : IComponent, IEnumerable
 {
     public List<Obj> items = new ();
@@ -51,13 +36,13 @@ public class ActionPick : IComponent
     }
 }
 
-public class PickingSystem : GameSystem
+public class PickingSystem : GameSystem, IUpdateSystem
 {
     public PickingSystem(World world) : base(world)
     {
     }
 
-    public override void Update(uint ticks)
+    public void Update(uint ticks)
     {
         var filter = new Filter()
             .With<ActionPick>()

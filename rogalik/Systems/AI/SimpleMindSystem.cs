@@ -1,20 +1,36 @@
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using rogalik.Framework;
 using rogalik.Systems.Combat;
-using rogalik.Systems.Common;
+using rogalik.Systems.Time;
 using rogalik.Systems.Walking;
 
 namespace rogalik.Systems.AI;
 
-public class SimpleMindSystem : GameSystem
+public class SimpleMindSystem : GameSystem, IEarlyUpdateSystem
 {
-    public override void Update(uint ticks)
+    public void EarlyUpdate(uint ticks)
     {
-        var objs = new Filter().With<Position>().With<Mind>().Apply(world.objects);
+        var objs = new Filter()
+            .With<Position>()
+            .With<Mind>()
+            .Without<Attempting>()
+            .With(o => !o.IsDoingSomething()).Apply(world.objects);
         foreach (var obj in objs)
         {
-            var rndStep = new Point(Rnd.NewInt(-1, 1), Rnd.NewInt(-1, 1));
-            obj.AddComponent(new ActionWalk(rndStep));
+            var victims = world.
+                GetObjectsInRadius(obj.GetComponent<Position>().point, 1)
+                .Except([obj]).Where(o => o.HasComponent<Health>()).ToList();
+                        
+            if (victims.Count > 0)
+            {
+                var victim = Rnd.ElementOf(victims);
+                obj.Attempt(new ActionHit(new Obj {new Weapon(10, 1, reach: 2)},victim));
+                return;
+            }
+            // var rndStep = new Point(Rnd.NewInt(-1, 2), Rnd.NewInt(-1, 2));
+            // obj.Do(new ActionWalk(rndStep));
+            // obj.Attempt(new ActionWalk((-1, 0)));
         }
     }
 
@@ -25,4 +41,10 @@ public class SimpleMindSystem : GameSystem
 
 public class Mind : IComponent
 {
+    public enum Trait
+    {
+        
+    }
+
+    public List<Trait> traits = new ();
 }

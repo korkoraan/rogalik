@@ -2,6 +2,6 @@ namespace rogalik;
 
 public static class Consts
 {
-    public const uint BIG_TICK = 1000;
+    public const int BIG_TICK = 100;
     public const string MAP_FILENAME = @"world.map";
 }

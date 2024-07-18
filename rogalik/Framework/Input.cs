@@ -50,7 +50,8 @@ public enum InputAction
     UIselectDown,
     UIselectUp,
     UIselect,
-    statsMenu
+    statsMenu,
+    wait
 }
 
 /// <summary>
@@ -173,6 +174,7 @@ public class Input
         [InputAction.UIselectDown] = new [] { Keys.Down },
         [InputAction.UIselectUp] = new [] { Keys.Up },
         [InputAction.UIselect] = new [] { Keys.Enter },
+        [InputAction.wait] = new [] { Keys.Space }
     };
     
     private List<InputAction> _lastInputActions = new();

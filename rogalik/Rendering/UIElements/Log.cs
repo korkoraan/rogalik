@@ -13,6 +13,7 @@ public class Log : ListView
 
     public Log(Renderer renderer)
     {
+        AcceptsKeyboardFocus = false;
         Border = new SolidBrush(Color.Gray);
         BorderThickness = new Thickness(1);
         _renderer = renderer;
@@ -27,11 +28,12 @@ public class Log : ListView
 
     public void OnLogUpdated(string newMessage)
     {
-        Widgets.Insert(0, new HorizontalSeparator { Color = Color.Transparent });
-        Widgets.Insert(0, new Label
+        Widgets.Add(new HorizontalSeparator { Color = Color.Transparent });
+        Widgets.Add(new Label
         {
             Text = newMessage, Left = 100,
-            // Font = _renderer.game.font
         });
+        Desktop.UpdateLayout();
+        ScrollViewer.ScrollPosition = ScrollViewer.ScrollMaximum;
     }
 }

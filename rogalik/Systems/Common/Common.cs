@@ -2,22 +2,23 @@ using rogalik.Framework;
 
 namespace rogalik.Systems.Common;
 
-public class Density : IComponent
+public class Weight : IComponent
 {
     public uint value;
 
-    public Density(uint value)
+    public Weight(uint value)
     {
         this.value = value;
     }
 }
 
-public class Volume : IComponent
+public class BasicAttributes : IComponent
 {
-    public uint value;
-
-    public Volume(uint value)
+    public uint strength;
+    public uint agility;
+    public BasicAttributes(uint strength = 1, uint agility = 1)
     {
-        this.value = value;
+        this.strength = strength;
+        this.agility = agility;
     }
 }

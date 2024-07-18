@@ -1,13 +1,13 @@
 using rogalik.Framework;
 namespace rogalik.Systems.Combat;
 
-public class DestructionSystem : GameSystem
+public class DestructionSystem : GameSystem, IUpdateSystem
 {
     public DestructionSystem(World world) : base(world)
     {
     }
 
-    public override void Update(uint ticks)
+    public void Update(uint ticks)
     {
         var filter = new Filter().With<Destroyed>().Apply(world.objects);
 

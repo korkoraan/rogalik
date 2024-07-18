@@ -1,12 +1,13 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using rogalik.Systems.Common;
+using System.Linq;
 
 namespace rogalik.Framework;
 
 public class Obj : IEnumerable
 {
-    private List<IComponent> components = new();
+    private List<IComponent> _components = new();
     public Obj()
     {
     }
@@ -17,40 +18,60 @@ public class Obj : IEnumerable
             AddComponent(component);
         }
     }
-    public TComponent GetComponent<TComponent>() where TComponent : IComponent
+    public TComponent? GetComponent<TComponent>() where TComponent : IComponent
     {
-        return (TComponent)components.Find(c => c is TComponent);
+        return _components.OfType<TComponent>().FirstOrDefault();
     }
-    public List<IComponent> GetAllComponents<T>()
+    
+    public IEnumerable<TComponent> GetAllComponents<TComponent>() where TComponent : IComponent
     {
-        return components.FindAll(c => c is T);
+        return _components.OfType<TComponent>();
     }
-    public Obj AddComponent<TComponent>(TComponent component) where TComponent :  IComponent
+    public IEnumerable<IComponent> GetAllComponents(Func<IComponent, bool> predicate)
     {
-        components.Add(component);
-        return this;
+        return _components.FindAll(c => predicate(c));
+    } 
+    public TComponent AddComponent<TComponent>(TComponent component) where TComponent :  IComponent
+    {
+        _components.Add(component);
+        return component;
     }
     public bool HasComponent<TComponent>() where TComponent : IComponent
     {
-        return components.Exists(c => c is TComponent);
+        return _components.Exists(c => c is TComponent);
     }
     public void Init()
     {
     }
     public void RemoveComponent(IComponent component)
     {
-        components.Remove(component);
+        _components.Remove(component);
     }
-    public override string ToString()
+
+    public void RemoveMultipleComponents(IEnumerable<IComponent> components)
     {
-        return GetComponent<Appearance>()?.description ?? "unknown object";
+        foreach (var c in components)
+        {
+            _components.Remove(c);
+        }
     }
+
+    public void RemoveComponentsOfType<TComponent>() where TComponent : IComponent
+    {
+        _components.RemoveAll(c => c is TComponent);
+    }
+
+    public void RemoveAllComponentsWhere(Func<IComponent, bool> predicate)
+    {
+        _components.RemoveAll(c => predicate(c));
+    }
+    
     public void Add(IComponent component)
     {
-        components.Add(component);
+        _components.Add(component);
     }
     public IEnumerator GetEnumerator()
     {
-        return components.GetEnumerator();
+        return _components.GetEnumerator();
     }
 }

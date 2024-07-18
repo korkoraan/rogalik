@@ -26,6 +26,15 @@ public class Filter
         return result;
     }
 
+    public Filter Without<TComponent>() where TComponent : IComponent
+    {
+        var result = new Filter
+        {
+            filterFunctions = new List<FilterFunc>(filterFunctions) { x=> !x.HasComponent<TComponent>() }
+        };
+        return result;
+    }
+
     private bool Check(Obj x)
     {
         return filterFunctions.All(f => f(x));
